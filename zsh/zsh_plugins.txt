@@ -108,7 +108,7 @@ zsh-users/zsh-syntax-highlighting
 jasonchaffee/zsh path:plugins/antigravity
 jasonchaffee/zsh path:plugins/brew
 jasonchaffee/zsh path:plugins/compressed
-#jasonchaffee/zsh path:plugins/curl
+jasonchaffee/zsh path:plugins/curl
 jasonchaffee/zsh path:plugins/dict
 jasonchaffee/zsh path:plugins/editor
 jasonchaffee/zsh path:plugins/git
