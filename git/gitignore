@@ -44,6 +44,12 @@ test-output
 .jsdtscope
 .settings
 
+### VS Code ###
+.vscode/
+
+## Claude
+.claude
+
 # sbt
 .cache/
 .history/
