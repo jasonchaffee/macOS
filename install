@@ -17,6 +17,7 @@ ${BASE_DIR}/bat/install
 ${BASE_DIR}/claude-code/install
 ${BASE_DIR}/codex/install
 ${BASE_DIR}/color-commands/install
+${BASE_DIR}/copilot-cli/install
 ${BASE_DIR}/cursor/install
 
 ${BASE_DIR}/python/install # Gcloud newer python
