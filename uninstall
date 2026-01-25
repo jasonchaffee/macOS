@@ -2,27 +2,36 @@
 
 BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
 
-${BASE_DIR}/antidote/uninstall
-${BASE_DIR}/bash/uninstall
-${BASE_DIR}/bat/uninstall
-${BASE_DIR}/claude-code/uninstall
-${BASE_DIR}/codex/uninstall
-${BASE_DIR}/color-commands/uninstall
-${BASE_DIR}/cursor/uninstall
-${BASE_DIR}/gcloud/uninstall
-${BASE_DIR}/gemini-cli/uninstall
-${BASE_DIR}/git/uninstall
-${BASE_DIR}/gradle/uninstall
-${BASE_DIR}/htop/uninstall
-#${BASE_DIR}/ice/uninstall
-${BASE_DIR}/java/uninstall
-${BASE_DIR}/maven/uninstall
-${BASE_DIR}/node/uninstall
-${BASE_DIR}/python/uninstall
+# Uninstall tools with custom configs first
 ${BASE_DIR}/vim/uninstall
+${BASE_DIR}/git/uninstall
 
-#Uninstall mise, then brew, and then zsh last
+# Uninstall npm packages (before removing node)
+grep '^npm:' ${BASE_DIR}/tools.conf | while read entry; do
+    ${BASE_DIR}/lib/uninstall-tool "$entry"
+done
+
+# Uninstall brew casks
+grep '^brew-cask:' ${BASE_DIR}/tools.conf | while read entry; do
+    ${BASE_DIR}/lib/uninstall-tool "$entry"
+done
+
+# Uninstall mise-managed tools
+grep '^mise:' ${BASE_DIR}/tools.conf | while read entry; do
+    ${BASE_DIR}/lib/uninstall-tool "$entry"
+done
+
+# Uninstall mise
 ${BASE_DIR}/mise/uninstall
-${BASE_DIR}/curl/uninstall
-${BASE_DIR}/brew/uninstall
+
+# Uninstall shell configs
+${BASE_DIR}/bash/uninstall
 ${BASE_DIR}/zsh/uninstall
+
+# Uninstall brew packages (antidote before brew)
+grep '^brew:' ${BASE_DIR}/tools.conf | tac | while read entry; do
+    ${BASE_DIR}/lib/uninstall-tool "$entry"
+done
+
+# Bootstrap cleanup: brew last
+${BASE_DIR}/brew/uninstall

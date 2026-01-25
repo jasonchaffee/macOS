@@ -1,6 +1,0 @@
-#!/usr/bin/env zsh
-if command -v mise >/dev/null 2>&1; then
-    . ${HOME}/.zshrc
-    echo "Installing Java Zulu"
-    mise use -g java@zulu
-fi

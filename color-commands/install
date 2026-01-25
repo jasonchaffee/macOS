@@ -1,6 +1,0 @@
-#!/usr/bin/env zsh
-if command -v brew >/dev/null 2>&1; then
-    brew install colordiff
-    brew install colormake
-    brew install colortail
-fi

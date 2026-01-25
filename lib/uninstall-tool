@@ -1,0 +1,32 @@
+#!/usr/bin/env zsh
+
+# Usage: uninstall-tool <type>:<package>[@version]
+# Types: brew, brew-cask, mise, npm
+
+entry=$1
+type=${entry%%:*}
+package_with_version=${entry#*:}
+package=${package_with_version%%@*}
+
+case $type in
+    brew|brew-cask)
+        if command -v brew >/dev/null 2>&1; then
+            brew uninstall $package
+        fi
+        ;;
+    mise)
+        if command -v mise >/dev/null 2>&1; then
+            mise unuse -g $package
+            mise uninstall --all $package
+        fi
+        ;;
+    npm)
+        if command -v npm >/dev/null 2>&1; then
+            npm uninstall -g $package
+        fi
+        ;;
+    *)
+        echo "Unknown type: $type"
+        exit 1
+        ;;
+esac

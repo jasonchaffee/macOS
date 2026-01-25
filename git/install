@@ -2,7 +2,7 @@
 
 BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
 
-if [[ -s "${HOME}/.gitignore " ]]; then
+if [[ -s "${HOME}/.gitignore" ]]; then
     echo "Backing up .gitignore"
     cp -v ${HOME}/.gitignore ${HOME}/.gitignore.git.bak
 fi

@@ -1,6 +1,0 @@
-#!/usr/bin/env zsh
-
-if command -v mise >/dev/null 2>&1; then
-    . ${HOME}/.zshrc
-    mise use -g gemini-cli
-fi

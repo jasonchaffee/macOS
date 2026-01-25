@@ -2,31 +2,39 @@
 
 BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
 
+# Bootstrap: brew must be first
 ${BASE_DIR}/brew/install
-# Need to install curl first for SSL issues
-${BASE_DIR}/curl/install
 
+# Install tools from tools.conf (in order, respecting dependencies)
+# Phase 1: brew packages (curl early for SSL)
+grep '^brew:' ${BASE_DIR}/tools.conf | while read entry; do
+    ${BASE_DIR}/lib/install-tool "$entry"
+done
+
+# Phase 2: shell configs
 ${BASE_DIR}/bash/install
 ${BASE_DIR}/zsh/install
 
-${BASE_DIR}/antidote/install
+# Phase 3: mise (version manager)
 ${BASE_DIR}/mise/install
+. ${HOME}/.zshrc
 
-${BASE_DIR}/node/install
-${BASE_DIR}/bat/install
-${BASE_DIR}/claude-code/install
-${BASE_DIR}/codex/install
-${BASE_DIR}/color-commands/install
-${BASE_DIR}/cursor/install
+# Phase 4: mise-managed tools
+grep '^mise:' ${BASE_DIR}/tools.conf | while read entry; do
+    ${BASE_DIR}/lib/install-tool "$entry"
+done
+. ${HOME}/.zshrc
 
-${BASE_DIR}/python/install # Gcloud newer python
-${BASE_DIR}/gcloud/install
+# Phase 5: npm packages (requires node from phase 4)
+grep '^npm:' ${BASE_DIR}/tools.conf | while read entry; do
+    ${BASE_DIR}/lib/install-tool "$entry"
+done
 
-${BASE_DIR}/gemini-cli/install
+# Phase 6: brew casks
+grep '^brew-cask:' ${BASE_DIR}/tools.conf | while read entry; do
+    ${BASE_DIR}/lib/install-tool "$entry"
+done
+
+# Phase 7: tools with custom configs
 ${BASE_DIR}/git/install
-${BASE_DIR}/gradle/install
-${BASE_DIR}/htop/install
-${BASE_DIR}/ice/install
-${BASE_DIR}/java/install
-${BASE_DIR}/maven/install
 ${BASE_DIR}/vim/install

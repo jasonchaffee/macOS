@@ -1,6 +1,0 @@
-#!/usr/bin/env zsh
-if command -v mise >/dev/null 2>&1; then
-    . ${HOME}/.zshrc
-    mise settings python.compile=1
-    mise use -g python
-fi

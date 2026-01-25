@@ -1,0 +1,38 @@
+#!/usr/bin/env zsh
+
+# Usage: install-tool <type>:<package>[@version]
+# Types: brew, brew-cask, mise, npm
+
+entry=$1
+type=${entry%%:*}
+package_with_version=${entry#*:}
+package=${package_with_version%%@*}
+version=${package_with_version#*@}
+[[ "$version" == "$package" ]] && version="latest"
+
+case $type in
+    brew)
+        if command -v brew >/dev/null 2>&1; then
+            brew install $package
+        fi
+        ;;
+    brew-cask)
+        if command -v brew >/dev/null 2>&1; then
+            brew install --cask $package
+        fi
+        ;;
+    mise)
+        if command -v mise >/dev/null 2>&1; then
+            mise use -g ${package}@${version}
+        fi
+        ;;
+    npm)
+        if command -v npm >/dev/null 2>&1; then
+            npm install -g $package
+        fi
+        ;;
+    *)
+        echo "Unknown type: $type"
+        exit 1
+        ;;
+esac
