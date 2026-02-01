@@ -64,31 +64,39 @@ ${BASE_DIR}/brew/uninstall
 
 # Final summary
 echo ""
-if [[ -f $failure_log ]]; then
-    echo -e "${RED}========================================${NC}"
-    echo -e "${RED}Uninstall complete - the following tools failed:${NC}"
+echo -e "${YELLOW}========================================${NC}"
+echo -e "${YELLOW}Uninstall Complete${NC}"
+echo -e "${YELLOW}========================================${NC}"
+echo ""
+
+has_failures=false
+has_manual=false
+[[ -f $failure_log ]] && has_failures=true
+[[ -f $manual_log ]] && has_manual=true
+
+if [[ "$has_failures" == "true" || "$has_manual" == "true" ]]; then
+    echo -e "${BOLD}Summary${NC}"
     echo ""
-    cat $failure_log
-    rm $failure_log
-    if [[ -f $manual_log ]]; then
+
+    if [[ "$has_failures" == "true" ]]; then
+        echo -e "${RED}Failed:${NC}"
+        cat $failure_log
+        rm $failure_log
         echo ""
-        echo -e "${YELLOW}Manual installs detected (not managed by brew):${NC}"
-        echo ""
+    fi
+
+    if [[ "$has_manual" == "true" ]]; then
+        echo -e "${YELLOW}Manual Installs (require manual removal):${NC}"
         cat $manual_log
         rm $manual_log
+        echo ""
     fi
-    echo ""
-    echo -e "${RED}========================================${NC}"
-elif [[ -f $manual_log ]]; then
-    echo -e "${YELLOW}========================================${NC}"
-    echo -e "${YELLOW}Uninstall complete - manual installs detected:${NC}"
-    echo ""
-    cat $manual_log
-    rm $manual_log
-    echo ""
-    echo -e "${YELLOW}========================================${NC}"
+
+    if [[ "$has_failures" == "true" ]]; then
+        echo -e "${RED}✗ Some tools failed to uninstall${NC}"
+    else
+        echo -e "${GREEN}✓ All managed tools removed successfully${NC}"
+    fi
 else
-    echo -e "${GREEN}========================================${NC}"
-    echo -e "${GREEN}Uninstall complete - all tools removed successfully${NC}"
-    echo -e "${GREEN}========================================${NC}"
+    echo -e "${GREEN}✓ All tools removed successfully${NC}"
 fi

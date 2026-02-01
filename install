@@ -74,34 +74,39 @@ ${BASE_DIR}/vim/install
 
 # Final summary
 echo ""
-has_failures=[[ -f $failure_log ]]
-has_manual=[[ -f $manual_log ]]
+echo -e "${BLUE}========================================${NC}"
+echo -e "${BLUE}Install Complete${NC}"
+echo -e "${BLUE}========================================${NC}"
+echo ""
 
-if [[ -f $failure_log ]]; then
-    echo -e "${RED}========================================${NC}"
-    echo -e "${RED}Install complete - the following tools failed:${NC}"
+has_failures=false
+has_manual=false
+[[ -f $failure_log ]] && has_failures=true
+[[ -f $manual_log ]] && has_manual=true
+
+if [[ "$has_failures" == "true" || "$has_manual" == "true" ]]; then
+    echo -e "${BOLD}Summary${NC}"
     echo ""
-    cat $failure_log
-    rm $failure_log
-    if [[ -f $manual_log ]]; then
+
+    if [[ "$has_failures" == "true" ]]; then
+        echo -e "${RED}Failed:${NC}"
+        cat $failure_log
+        rm $failure_log
         echo ""
-        echo -e "${YELLOW}Manual installs detected (not managed by brew):${NC}"
-        echo ""
+    fi
+
+    if [[ "$has_manual" == "true" ]]; then
+        echo -e "${YELLOW}Manual Installs (not managed by brew):${NC}"
         cat $manual_log
         rm $manual_log
+        echo ""
     fi
-    echo ""
-    echo -e "${RED}========================================${NC}"
-elif [[ -f $manual_log ]]; then
-    echo -e "${YELLOW}========================================${NC}"
-    echo -e "${YELLOW}Install complete - manual installs detected:${NC}"
-    echo ""
-    cat $manual_log
-    rm $manual_log
-    echo ""
-    echo -e "${YELLOW}========================================${NC}"
+
+    if [[ "$has_failures" == "true" ]]; then
+        echo -e "${RED}✗ Some tools failed to install${NC}"
+    else
+        echo -e "${GREEN}✓ All tools installed successfully${NC}"
+    fi
 else
-    echo -e "${GREEN}========================================${NC}"
-    echo -e "${GREEN}Install complete - all tools installed successfully${NC}"
-    echo -e "${GREEN}========================================${NC}"
+    echo -e "${GREEN}✓ All tools installed successfully${NC}"
 fi

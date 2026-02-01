@@ -69,9 +69,9 @@ load test_helper
 }
 
 @test "install script has final summary" {
-    grep -q 'Install complete' "${PROJECT_DIR}/install"
+    grep -q 'Install Complete' "${PROJECT_DIR}/install"
 }
 
 @test "uninstall script has final summary" {
-    grep -q 'Uninstall complete' "${PROJECT_DIR}/uninstall"
+    grep -q 'Uninstall Complete' "${PROJECT_DIR}/uninstall"
 }
