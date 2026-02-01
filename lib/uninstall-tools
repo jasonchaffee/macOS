@@ -28,14 +28,28 @@ fi
 
 echo "$entries" | while read entry; do
     [[ -z "$entry" ]] && continue
-    ${BASE_DIR}/uninstall-tool "$entry" </dev/null
-    exit_code=$?
+
+    # Capture output to show errors in summary
+    tmp_output=/tmp/uninstall_output_$$
+    ${BASE_DIR}/uninstall-tool "$entry" </dev/null 2>&1 | tee $tmp_output
+    exit_code=${pipestatus[1]}
+
     clean=${entry%%#*}
     clean=${clean%% *}
     pkg=${clean#*:}
+
     if [[ $exit_code -eq 1 ]]; then
         echo -e "  ${RED}✗${NC} ${type}: ${BOLD}$pkg${NC}" >> $failure_log
+        # Capture last 3 lines of error output (skip the "Uninstalling..." line)
+        error_lines=$(grep -v "^Uninstalling\|^$" $tmp_output | tail -3)
+        if [[ -n "$error_lines" ]]; then
+            echo "$error_lines" | while read line; do
+                echo -e "      ${RED}$line${NC}" >> $failure_log
+            done
+        fi
     elif [[ $exit_code -eq 2 && -n "$manual_log" ]]; then
         echo -e "  ${YELLOW}⚠${NC} ${type}: ${BOLD}$pkg${NC}" >> $manual_log
     fi
+
+    rm -f $tmp_output
 done

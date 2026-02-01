@@ -62,3 +62,35 @@ load test_helper
 @test "uninstall-tool strips comments from entries" {
     grep -q 'entry=\${entry%%#\*}' "${LIB_DIR}/uninstall-tool"
 }
+
+@test "install-tools captures error output" {
+    # Check that install-tools captures output for error reporting
+    grep -q 'tmp_output=' "${LIB_DIR}/install-tools"
+    grep -q 'tee.*tmp_output' "${LIB_DIR}/install-tools"
+}
+
+@test "uninstall-tools captures error output" {
+    # Check that uninstall-tools captures output for error reporting
+    grep -q 'tmp_output=' "${LIB_DIR}/uninstall-tools"
+    grep -q 'tee.*tmp_output' "${LIB_DIR}/uninstall-tools"
+}
+
+@test "install-tools logs error details to failure_log" {
+    # Check that error lines are appended to failure log
+    grep -q 'error_lines' "${LIB_DIR}/install-tools"
+    grep -q '>> \$failure_log' "${LIB_DIR}/install-tools"
+}
+
+@test "uninstall-tools logs error details to failure_log" {
+    # Check that error lines are appended to failure log
+    grep -q 'error_lines' "${LIB_DIR}/uninstall-tools"
+    grep -q '>> \$failure_log' "${LIB_DIR}/uninstall-tools"
+}
+
+@test "install-tool returns exit code 2 for manual installs" {
+    grep -q 'exit 2' "${LIB_DIR}/install-tool"
+}
+
+@test "uninstall-tool returns exit code 2 for manual installs" {
+    grep -q 'exit 2' "${LIB_DIR}/uninstall-tool"
+}
