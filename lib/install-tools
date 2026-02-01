@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-# Usage: install-tools <type> [failure_log]
+# Usage: install-tools <type> [failure_log] [manual_log]
 # Installs all tools of the given type from tools.conf
 
 BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
@@ -8,14 +8,18 @@ source ${BASE_DIR}/colors
 
 type=$1
 failure_log=$2
+manual_log=$3
 
 grep "^${type}:" ${BASE_DIR}/../tools.conf | while read entry; do
     [[ -z "$entry" ]] && continue
     ${BASE_DIR}/install-tool "$entry" </dev/null
-    if [[ $? -ne 0 ]]; then
-        clean=${entry%%#*}
-        clean=${clean%% *}
-        pkg=${clean#*:}
+    exit_code=$?
+    clean=${entry%%#*}
+    clean=${clean%% *}
+    pkg=${clean#*:}
+    if [[ $exit_code -eq 1 ]]; then
         echo -e "  ${RED}✗${NC} ${type}: ${BOLD}$pkg${NC}" >> $failure_log
+    elif [[ $exit_code -eq 2 && -n "$manual_log" ]]; then
+        echo -e "  ${YELLOW}⚠${NC} ${type}: ${BOLD}$pkg${NC}" >> $manual_log
     fi
 done

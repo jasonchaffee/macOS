@@ -2,7 +2,7 @@
 
 # Usage: install-tool <type>:<package>[@version]
 # Types: brew, brew-cask, mise, npm, mas, vscode, cursor, uv, gcloud
-# Returns: 0 on success, 1 on failure
+# Returns: 0 on success, 1 on failure, 2 on manual install detected
 
 BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
 source ${BASE_DIR}/colors
@@ -43,8 +43,8 @@ case $type in
             # Use JSON output to get exact app name (e.g., iterm2 → iTerm.app)
             app_name=$(brew info --json=v2 --cask $package 2>/dev/null | jq -r '.casks[0].artifacts[] | .app? // empty | .[0]' 2>/dev/null | head -1)
             if [[ -n "$app_name" && -d "/Applications/$app_name" ]]; then
-                echo -e "${GREEN}Already installed (manual):${NC} ${BOLD}$package${NC} → /Applications/$app_name"
-                exit 0
+                echo -e "${YELLOW}Already installed (manual):${NC} ${BOLD}$package${NC} → /Applications/$app_name"
+                exit 2
             fi
             echo -e "${CYAN}Installing brew cask:${NC} ${BOLD}$package${NC}"
             brew install --cask $package

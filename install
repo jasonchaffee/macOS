@@ -2,7 +2,8 @@
 
 BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
 source ${BASE_DIR}/lib/colors
-failure_log=/tmp/install_summary_$$
+failure_log=/tmp/install_failures_$$
+manual_log=/tmp/install_manual_$$
 
 echo -e "${BOLD}${BLUE}Starting macOS install...${NC}"
 echo ""
@@ -20,7 +21,7 @@ fi
 
 # Phase 2: Brew packages
 echo -e "\n${BLUE}Phase 2:${NC} Brew packages"
-${BASE_DIR}/lib/install-tools brew $failure_log
+${BASE_DIR}/lib/install-tools brew $failure_log $manual_log
 
 # Phase 3: Shell configs
 echo -e "\n${BLUE}Phase 3:${NC} Shell configs"
@@ -36,35 +37,35 @@ fi
 
 # Phase 5: Mise-managed tools
 echo -e "\n${BLUE}Phase 5:${NC} Mise-managed tools"
-${BASE_DIR}/lib/install-tools mise $failure_log
+${BASE_DIR}/lib/install-tools mise $failure_log $manual_log
 
 # Phase 6: NPM packages
 echo -e "\n${BLUE}Phase 6:${NC} NPM packages"
-${BASE_DIR}/lib/install-tools npm $failure_log
+${BASE_DIR}/lib/install-tools npm $failure_log $manual_log
 
 # Phase 7: Brew casks
 echo -e "\n${BLUE}Phase 7:${NC} Brew casks"
-${BASE_DIR}/lib/install-tools brew-cask $failure_log
+${BASE_DIR}/lib/install-tools brew-cask $failure_log $manual_log
 
 # Phase 8: Google Cloud components
 echo -e "\n${BLUE}Phase 8:${NC} Google Cloud components"
-${BASE_DIR}/lib/install-tools gcloud $failure_log
+${BASE_DIR}/lib/install-tools gcloud $failure_log $manual_log
 
 # Phase 9: Python tools (via uv)
 echo -e "\n${BLUE}Phase 9:${NC} Python tools"
-${BASE_DIR}/lib/install-tools uv $failure_log
+${BASE_DIR}/lib/install-tools uv $failure_log $manual_log
 
 # Phase 10: Mac App Store apps
 echo -e "\n${BLUE}Phase 10:${NC} Mac App Store apps"
-${BASE_DIR}/lib/install-tools mas $failure_log
+${BASE_DIR}/lib/install-tools mas $failure_log $manual_log
 
 # Phase 11: Cursor extensions
 echo -e "\n${BLUE}Phase 11:${NC} Cursor extensions"
-${BASE_DIR}/lib/install-tools cursor $failure_log
+${BASE_DIR}/lib/install-tools cursor $failure_log $manual_log
 
 # Phase 12: VS Code extensions
 echo -e "\n${BLUE}Phase 12:${NC} VS Code extensions"
-${BASE_DIR}/lib/install-tools vscode $failure_log
+${BASE_DIR}/lib/install-tools vscode $failure_log $manual_log
 
 # Phase 13: Custom configs
 echo -e "\n${BLUE}Phase 13:${NC} Custom configs"
@@ -73,14 +74,32 @@ ${BASE_DIR}/vim/install
 
 # Final summary
 echo ""
+has_failures=[[ -f $failure_log ]]
+has_manual=[[ -f $manual_log ]]
+
 if [[ -f $failure_log ]]; then
     echo -e "${RED}========================================${NC}"
     echo -e "${RED}Install complete - the following tools failed:${NC}"
     echo ""
     cat $failure_log
-    echo ""
     rm $failure_log
+    if [[ -f $manual_log ]]; then
+        echo ""
+        echo -e "${YELLOW}Manual installs detected (not managed by brew):${NC}"
+        echo ""
+        cat $manual_log
+        rm $manual_log
+    fi
+    echo ""
     echo -e "${RED}========================================${NC}"
+elif [[ -f $manual_log ]]; then
+    echo -e "${YELLOW}========================================${NC}"
+    echo -e "${YELLOW}Install complete - manual installs detected:${NC}"
+    echo ""
+    cat $manual_log
+    rm $manual_log
+    echo ""
+    echo -e "${YELLOW}========================================${NC}"
 else
     echo -e "${GREEN}========================================${NC}"
     echo -e "${GREEN}Install complete - all tools installed successfully${NC}"
