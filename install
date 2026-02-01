@@ -53,14 +53,16 @@ ${BASE_DIR}/vim/install
 
 # Final summary
 echo ""
-echo -e "${BOLD}========================================${NC}"
 if [[ -f $failure_log ]]; then
+    echo -e "${RED}========================================${NC}"
     echo -e "${RED}Install complete - the following tools failed:${NC}"
     echo ""
     cat $failure_log
     echo ""
     rm $failure_log
+    echo -e "${RED}========================================${NC}"
 else
+    echo -e "${GREEN}========================================${NC}"
     echo -e "${GREEN}Install complete - all tools installed successfully${NC}"
+    echo -e "${GREEN}========================================${NC}"
 fi
-echo -e "${BOLD}========================================${NC}"
