@@ -75,3 +75,19 @@ load test_helper
 @test "uninstall script has final summary" {
     grep -q 'Uninstall Complete' "${PROJECT_DIR}/uninstall"
 }
+
+@test "install script has colored summary borders" {
+    grep -q 'border_color=' "${PROJECT_DIR}/install"
+    grep -q 'border_color.*GREEN' "${PROJECT_DIR}/install"
+    grep -q 'border_color.*RED' "${PROJECT_DIR}/install"
+}
+
+@test "uninstall script has colored summary borders" {
+    grep -q 'border_color=' "${PROJECT_DIR}/uninstall"
+    grep -q 'border_color.*GREEN' "${PROJECT_DIR}/uninstall"
+    grep -q 'border_color.*RED' "${PROJECT_DIR}/uninstall"
+}
+
+@test "zshrc sources .zshrc.local for machine-specific config" {
+    grep -q 'zshrc.local' "${PROJECT_DIR}/zsh/zshrc"
+}

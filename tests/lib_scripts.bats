@@ -94,3 +94,20 @@ load test_helper
 @test "uninstall-tool returns exit code 2 for manual installs" {
     grep -q 'exit 2' "${LIB_DIR}/uninstall-tool"
 }
+
+@test "backup script exists" {
+    [[ -f "${LIB_DIR}/backup" ]]
+}
+
+@test "backup script defines backup_file function" {
+    grep -q 'backup_file()' "${LIB_DIR}/backup"
+}
+
+@test "backup script defines install_with_backup function" {
+    grep -q 'install_with_backup()' "${LIB_DIR}/backup"
+}
+
+@test "backup script uses timestamped backups" {
+    grep -q 'timestamp=.*date' "${LIB_DIR}/backup"
+    grep -q 'dotfiles_backups' "${LIB_DIR}/backup"
+}

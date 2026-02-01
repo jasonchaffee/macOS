@@ -63,9 +63,43 @@ Tests use [bats-core](https://github.com/bats-core/bats-core) (installed via `br
 
 - **Smart detection** - Skips already-installed tools (no unnecessary downloads)
 - **Manual install detection** - Identifies apps installed outside of brew
-- **Colored output** - Phase headers, success/failure indicators
-- **Summary report** - Shows failures (red ✗) and manual installs (yellow ⚠)
+- **Timestamped backups** - All config files backed up to `~/.dotfiles_backups/` before changes
+- **Merge/Replace prompts** - When config files differ, choose to Replace, Keep, Merge, or Diff
+- **Machine-specific config** - `~/.zshrc.local` for secrets and work settings (not tracked)
 - **Modern CLI aliases** - Replaces legacy commands with faster alternatives (see zsh/zshrc)
+- **Colored summary** - Green border on success, red on failure, yellow summary section
+
+## Backups
+
+Config files are backed up with timestamps before any changes:
+
+```
+~/.dotfiles_backups/
+├── .zshrc/
+│   ├── 20250201_103045
+│   └── 20250201_114532
+├── .gitconfig/
+│   └── 20250201_103045
+└── ...
+```
+
+If a config file differs from the repo version, you'll be prompted:
+1. **Replace** - Use repo version (current backed up)
+2. **Keep** - Keep current version, skip repo version
+3. **Merge** - Open VS Code/vimdiff to merge manually
+4. **Diff** - Show differences first, then ask again
+
+## Machine-Specific Config
+
+For secrets, API keys, and work-specific settings, create `~/.zshrc.local`:
+
+```bash
+# Example ~/.zshrc.local (not tracked in git)
+export API_KEY="your-secret-key"
+export NODE_EXTRA_CA_CERTS="/path/to/certs.pem"
+```
+
+This file is sourced by `~/.zshrc` if it exists.
 
 ## What's Installed
 
