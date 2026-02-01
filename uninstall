@@ -12,33 +12,53 @@ echo -e "${YELLOW}Phase 1:${NC} Custom configs"
 ${BASE_DIR}/vim/uninstall
 ${BASE_DIR}/git/uninstall
 
-# Phase 2: NPM packages (before removing node)
-echo -e "\n${YELLOW}Phase 2:${NC} NPM packages"
+# Phase 2: VS Code extensions
+echo -e "\n${YELLOW}Phase 2:${NC} VS Code extensions"
+${BASE_DIR}/lib/uninstall-tools vscode $failure_log
+
+# Phase 3: Cursor extensions
+echo -e "\n${YELLOW}Phase 3:${NC} Cursor extensions"
+${BASE_DIR}/lib/uninstall-tools cursor $failure_log
+
+# Phase 4: Mac App Store apps
+echo -e "\n${YELLOW}Phase 4:${NC} Mac App Store apps"
+${BASE_DIR}/lib/uninstall-tools mas $failure_log
+
+# Phase 5: Python tools (via uv)
+echo -e "\n${YELLOW}Phase 5:${NC} Python tools"
+${BASE_DIR}/lib/uninstall-tools uv $failure_log
+
+# Phase 6: Google Cloud components (before removing gcloud-cli cask)
+echo -e "\n${YELLOW}Phase 6:${NC} Google Cloud components"
+${BASE_DIR}/lib/uninstall-tools gcloud $failure_log
+
+# Phase 7: NPM packages (before removing node)
+echo -e "\n${YELLOW}Phase 7:${NC} NPM packages"
 ${BASE_DIR}/lib/uninstall-tools npm $failure_log
 
-# Phase 3: Brew casks
-echo -e "\n${YELLOW}Phase 3:${NC} Brew casks"
+# Phase 8: Brew casks
+echo -e "\n${YELLOW}Phase 8:${NC} Brew casks"
 ${BASE_DIR}/lib/uninstall-tools brew-cask $failure_log
 
-# Phase 4: Mise-managed tools
-echo -e "\n${YELLOW}Phase 4:${NC} Mise-managed tools"
+# Phase 9: Mise-managed tools
+echo -e "\n${YELLOW}Phase 9:${NC} Mise-managed tools"
 ${BASE_DIR}/lib/uninstall-tools mise $failure_log
 
-# Phase 5: Mise version manager
-echo -e "\n${YELLOW}Phase 5:${NC} Mise version manager"
+# Phase 10: Mise version manager
+echo -e "\n${YELLOW}Phase 10:${NC} Mise version manager"
 ${BASE_DIR}/mise/uninstall
 
-# Phase 6: Shell configs
-echo -e "\n${YELLOW}Phase 6:${NC} Shell configs"
+# Phase 11: Shell configs
+echo -e "\n${YELLOW}Phase 11:${NC} Shell configs"
 ${BASE_DIR}/bash/uninstall
 ${BASE_DIR}/zsh/uninstall
 
-# Phase 7: Brew packages (reverse order)
-echo -e "\n${YELLOW}Phase 7:${NC} Brew packages"
+# Phase 12: Brew packages (reverse order)
+echo -e "\n${YELLOW}Phase 12:${NC} Brew packages"
 ${BASE_DIR}/lib/uninstall-tools brew --reverse $failure_log
 
-# Phase 8: Homebrew
-echo -e "\n${YELLOW}Phase 8:${NC} Homebrew"
+# Phase 13: Homebrew
+echo -e "\n${YELLOW}Phase 13:${NC} Homebrew"
 ${BASE_DIR}/brew/uninstall
 
 # Final summary

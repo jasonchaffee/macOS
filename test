@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+# Run all bats tests
+
+set -e
+
+BASE_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+
+# Check if bats is installed
+if ! command -v bats >/dev/null 2>&1; then
+    echo "Error: bats-core is not installed"
+    echo "Install with: brew install bats-core"
+    exit 1
+fi
+
+# Run tests
+if [[ $# -eq 0 ]]; then
+    # Run all tests
+    bats "${BASE_DIR}/tests/"*.bats
+else
+    # Run specific test file(s)
+    bats "$@"
+fi

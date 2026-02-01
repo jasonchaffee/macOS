@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 # Usage: install-tool <type>:<package>[@version]
-# Types: brew, brew-cask, mise, npm
+# Types: brew, brew-cask, mise, npm, mas, vscode, cursor, uv, gcloud
 # Returns: 0 on success, 1 on failure
 
 BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
@@ -47,6 +47,41 @@ case $type in
         if command -v npm >/dev/null 2>&1; then
             echo -e "${CYAN}Installing npm package:${NC} ${BOLD}$package${NC}"
             npm install -g $package
+            exit $?
+        fi
+        ;;
+    mas)
+        if command -v mas >/dev/null 2>&1; then
+            echo -e "${CYAN}Installing Mac App Store app:${NC} ${BOLD}$package${NC}"
+            mas install $package
+            exit $?
+        fi
+        ;;
+    vscode)
+        if command -v code >/dev/null 2>&1; then
+            echo -e "${CYAN}Installing VS Code extension:${NC} ${BOLD}$package${NC}"
+            code --install-extension $package
+            exit $?
+        fi
+        ;;
+    cursor)
+        if command -v cursor >/dev/null 2>&1; then
+            echo -e "${CYAN}Installing Cursor extension:${NC} ${BOLD}$package${NC}"
+            cursor --install-extension $package
+            exit $?
+        fi
+        ;;
+    uv)
+        if command -v uv >/dev/null 2>&1; then
+            echo -e "${CYAN}Installing Python tool:${NC} ${BOLD}$package${NC}"
+            uv tool install $package
+            exit $?
+        fi
+        ;;
+    gcloud)
+        if command -v gcloud >/dev/null 2>&1; then
+            echo -e "${CYAN}Installing gcloud component:${NC} ${BOLD}$package${NC}"
+            gcloud components install $package --quiet
             exit $?
         fi
         ;;

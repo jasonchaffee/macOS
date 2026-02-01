@@ -19,7 +19,7 @@ cd macOS
 macOS/
 ├── install           # Main install script
 ├── uninstall         # Main uninstall script
-├── tools.conf        # Simple tools configuration
+├── tools.conf        # Tools configuration
 ├── lib/              # Shared helper scripts
 ├── bash/             # Bash config
 ├── zsh/              # Zsh config + plugins
@@ -31,15 +31,33 @@ macOS/
 
 ## Adding Tools
 
-Simple tools go in `tools.conf`:
+Add tools to `tools.conf`:
 
-```
+```bash
 brew:toolname          # Homebrew formula
 brew-cask:appname      # Homebrew cask (GUI apps)
 mise:runtime@version   # Mise-managed tool
+npm:package            # NPM global package
+mas:123456789          # Mac App Store app (use app ID)
+vscode:publisher.ext   # VS Code extension
+cursor:publisher.ext   # Cursor extension
+uv:pytool              # Python CLI tool (via uv)
+gcloud:component       # Google Cloud SDK component
 ```
 
 Tools with custom configs get their own directory with `install`/`uninstall` scripts.
+
+## Testing
+
+```bash
+# Run all tests
+./test
+
+# Run a specific test file
+./test tests/parse_entry.bats
+```
+
+Tests use [bats-core](https://github.com/bats-core/bats-core) (installed via `brew:bats-core`).
 
 ## What's Installed
 

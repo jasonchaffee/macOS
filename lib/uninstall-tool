@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 # Usage: uninstall-tool <type>:<package>[@version]
-# Types: brew, brew-cask, mise, npm
+# Types: brew, brew-cask, mise, npm, mas, vscode, cursor, uv, gcloud
 # Returns: 0 on success, 1 on failure
 
 BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
@@ -44,6 +44,41 @@ case $type in
         if command -v npm >/dev/null 2>&1; then
             echo -e "${YELLOW}Uninstalling npm package:${NC} ${BOLD}$package${NC}"
             npm uninstall -g $package
+            exit $?
+        fi
+        ;;
+    mas)
+        if command -v mas >/dev/null 2>&1; then
+            echo -e "${YELLOW}Uninstalling Mac App Store app:${NC} ${BOLD}$package${NC}"
+            mas uninstall $package
+            exit $?
+        fi
+        ;;
+    vscode)
+        if command -v code >/dev/null 2>&1; then
+            echo -e "${YELLOW}Uninstalling VS Code extension:${NC} ${BOLD}$package${NC}"
+            code --uninstall-extension $package
+            exit $?
+        fi
+        ;;
+    cursor)
+        if command -v cursor >/dev/null 2>&1; then
+            echo -e "${YELLOW}Uninstalling Cursor extension:${NC} ${BOLD}$package${NC}"
+            cursor --uninstall-extension $package
+            exit $?
+        fi
+        ;;
+    uv)
+        if command -v uv >/dev/null 2>&1; then
+            echo -e "${YELLOW}Uninstalling Python tool:${NC} ${BOLD}$package${NC}"
+            uv tool uninstall $package
+            exit $?
+        fi
+        ;;
+    gcloud)
+        if command -v gcloud >/dev/null 2>&1; then
+            echo -e "${YELLOW}Uninstalling gcloud component:${NC} ${BOLD}$package${NC}"
+            gcloud components remove $package --quiet
             exit $?
         fi
         ;;

@@ -25,10 +25,18 @@ Simple tools are defined in `tools.conf` with format `<type>:<package>[@version]
 - `brew-cask:` - Homebrew casks (GUI apps)
 - `mise:` - Mise-managed runtimes/tools (supports `@version`)
 - `npm:` - NPM global packages
+- `mas:` - Mac App Store apps (use numeric app ID)
+- `vscode:` - VS Code extensions
+- `cursor:` - Cursor editor extensions
+- `uv:` - Python CLI tools (via uv tool install)
+- `gcloud:` - Google Cloud SDK components
 
 Helper scripts in `lib/` process these entries:
 - `lib/install-tool` - Installs a single tool entry
 - `lib/uninstall-tool` - Uninstalls a single tool entry
+- `lib/install-tools` - Batch install by type
+- `lib/uninstall-tools` - Batch uninstall by type
+- `lib/colors` - ANSI color definitions
 
 ### Plugin Directories
 
@@ -51,8 +59,21 @@ The main `install` script enforces dependency order:
 4. **mise** - Runtime version manager
 5. **mise tools** - node, python, java, terraform, etc.
 6. **npm packages** - Requires node from previous phase
-7. **brew casks** - GUI applications
-8. **custom configs** - git, vim
+7. **brew casks** - GUI applications (includes gcloud-cli)
+8. **gcloud components** - Google Cloud SDK components
+9. **uv tools** - Python CLI tools
+10. **mas** - Mac App Store apps
+11. **cursor extensions** - Cursor editor extensions
+12. **vscode extensions** - VS Code extensions
+13. **custom configs** - git, vim
+
+### Testing
+
+Run tests with `./test`. Tests are in `tests/` directory using bats-core:
+- `parse_entry.bats` - Entry parsing logic (type:package@version)
+- `tools_conf.bats` - Validates tools.conf format
+- `lib_scripts.bats` - Checks lib scripts structure
+- `main_scripts.bats` - Validates install/uninstall phases
 
 ### Environment Variables
 

@@ -46,8 +46,28 @@ ${BASE_DIR}/lib/install-tools npm $failure_log
 echo -e "\n${BLUE}Phase 7:${NC} Brew casks"
 ${BASE_DIR}/lib/install-tools brew-cask $failure_log
 
-# Phase 8: Custom configs
-echo -e "\n${BLUE}Phase 8:${NC} Custom configs"
+# Phase 8: Google Cloud components
+echo -e "\n${BLUE}Phase 8:${NC} Google Cloud components"
+${BASE_DIR}/lib/install-tools gcloud $failure_log
+
+# Phase 9: Python tools (via uv)
+echo -e "\n${BLUE}Phase 9:${NC} Python tools"
+${BASE_DIR}/lib/install-tools uv $failure_log
+
+# Phase 10: Mac App Store apps
+echo -e "\n${BLUE}Phase 10:${NC} Mac App Store apps"
+${BASE_DIR}/lib/install-tools mas $failure_log
+
+# Phase 11: Cursor extensions
+echo -e "\n${BLUE}Phase 11:${NC} Cursor extensions"
+${BASE_DIR}/lib/install-tools cursor $failure_log
+
+# Phase 12: VS Code extensions
+echo -e "\n${BLUE}Phase 12:${NC} VS Code extensions"
+${BASE_DIR}/lib/install-tools vscode $failure_log
+
+# Phase 13: Custom configs
+echo -e "\n${BLUE}Phase 13:${NC} Custom configs"
 ${BASE_DIR}/git/install
 ${BASE_DIR}/vim/install
 
