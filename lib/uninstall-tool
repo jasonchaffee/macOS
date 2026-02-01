@@ -2,7 +2,7 @@
 
 # Usage: uninstall-tool <type>:<package>[@version]
 # Types: brew, brew-cask, mise, npm, mas, vscode, cursor, uv, gcloud
-# Returns: 0 on success, 1 on failure
+# Returns: 0 on success/not installed, 1 on failure, 2 on manual install detected
 
 BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
 source ${BASE_DIR}/colors
@@ -20,6 +20,11 @@ package=${package_with_version%%@*}
 case $type in
     brew)
         if command -v brew >/dev/null 2>&1; then
+            # Check if installed via brew
+            if ! brew list $package &>/dev/null; then
+                echo -e "${GREEN}Not installed:${NC} ${BOLD}$package${NC}"
+                exit 0
+            fi
             echo -e "${YELLOW}Uninstalling brew package:${NC} ${BOLD}$package${NC}"
             brew uninstall $package
             exit $?
@@ -27,9 +32,20 @@ case $type in
         ;;
     brew-cask)
         if command -v brew >/dev/null 2>&1; then
-            echo -e "${YELLOW}Uninstalling brew cask:${NC} ${BOLD}$package${NC}"
-            brew uninstall --cask $package
-            exit $?
+            # Check if installed via brew
+            if brew list --cask $package &>/dev/null; then
+                echo -e "${YELLOW}Uninstalling brew cask:${NC} ${BOLD}$package${NC}"
+                brew uninstall --cask $package
+                exit $?
+            fi
+            # Check if app exists in /Applications (manual install)
+            app_name=$(brew info --json=v2 --cask $package 2>/dev/null | jq -r '.casks[0].artifacts[] | .app? // empty | .[0]' 2>/dev/null | head -1)
+            if [[ -n "$app_name" && -d "/Applications/$app_name" ]]; then
+                echo -e "${YELLOW}Manual install detected:${NC} ${BOLD}$package${NC} → /Applications/$app_name"
+                exit 2
+            fi
+            echo -e "${GREEN}Not installed:${NC} ${BOLD}$package${NC}"
+            exit 0
         fi
         ;;
     mise)
@@ -42,6 +58,11 @@ case $type in
         ;;
     npm)
         if command -v npm >/dev/null 2>&1; then
+            # Check if installed
+            if ! npm list -g $package &>/dev/null; then
+                echo -e "${GREEN}Not installed:${NC} ${BOLD}$package${NC}"
+                exit 0
+            fi
             echo -e "${YELLOW}Uninstalling npm package:${NC} ${BOLD}$package${NC}"
             npm uninstall -g $package
             exit $?
@@ -56,6 +77,11 @@ case $type in
         ;;
     vscode)
         if command -v code >/dev/null 2>&1; then
+            # Check if installed
+            if ! code --list-extensions 2>/dev/null | grep -qi "^${package}$"; then
+                echo -e "${GREEN}Not installed:${NC} ${BOLD}$package${NC}"
+                exit 0
+            fi
             echo -e "${YELLOW}Uninstalling VS Code extension:${NC} ${BOLD}$package${NC}"
             code --uninstall-extension $package
             exit $?
@@ -63,6 +89,11 @@ case $type in
         ;;
     cursor)
         if command -v cursor >/dev/null 2>&1; then
+            # Check if installed
+            if ! cursor --list-extensions 2>/dev/null | grep -qi "^${package}$"; then
+                echo -e "${GREEN}Not installed:${NC} ${BOLD}$package${NC}"
+                exit 0
+            fi
             echo -e "${YELLOW}Uninstalling Cursor extension:${NC} ${BOLD}$package${NC}"
             cursor --uninstall-extension $package
             exit $?
@@ -70,6 +101,11 @@ case $type in
         ;;
     uv)
         if command -v uv >/dev/null 2>&1; then
+            # Check if installed
+            if ! uv tool list 2>/dev/null | grep -q "^$package "; then
+                echo -e "${GREEN}Not installed:${NC} ${BOLD}$package${NC}"
+                exit 0
+            fi
             echo -e "${YELLOW}Uninstalling Python tool:${NC} ${BOLD}$package${NC}"
             uv tool uninstall $package
             exit $?

@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-# Usage: uninstall-tools <type> [--reverse] [failure_log]
+# Usage: uninstall-tools <type> [--reverse] [failure_log] [manual_log]
 # Uninstalls all tools of the given type from tools.conf
 
 BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
@@ -12,9 +12,11 @@ type=$1
 if [[ "$2" == "--reverse" ]]; then
     reverse=true
     failure_log=$3
+    manual_log=$4
 else
     reverse=false
     failure_log=$2
+    manual_log=$3
 fi
 
 # Get tool entries, optionally reversed
@@ -27,10 +29,13 @@ fi
 echo "$entries" | while read entry; do
     [[ -z "$entry" ]] && continue
     ${BASE_DIR}/uninstall-tool "$entry" </dev/null
-    if [[ $? -ne 0 ]]; then
-        clean=${entry%%#*}
-        clean=${clean%% *}
-        pkg=${clean#*:}
+    exit_code=$?
+    clean=${entry%%#*}
+    clean=${clean%% *}
+    pkg=${clean#*:}
+    if [[ $exit_code -eq 1 ]]; then
         echo -e "  ${RED}✗${NC} ${type}: ${BOLD}$pkg${NC}" >> $failure_log
+    elif [[ $exit_code -eq 2 && -n "$manual_log" ]]; then
+        echo -e "  ${YELLOW}⚠${NC} ${type}: ${BOLD}$pkg${NC}" >> $manual_log
     fi
 done

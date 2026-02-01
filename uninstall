@@ -2,7 +2,8 @@
 
 BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
 source ${BASE_DIR}/lib/colors
-failure_log=/tmp/uninstall_summary_$$
+failure_log=/tmp/uninstall_failures_$$
+manual_log=/tmp/uninstall_manual_$$
 
 echo -e "${BOLD}${YELLOW}Starting macOS uninstall...${NC}"
 echo ""
@@ -14,35 +15,35 @@ ${BASE_DIR}/git/uninstall
 
 # Phase 2: VS Code extensions
 echo -e "\n${YELLOW}Phase 2:${NC} VS Code extensions"
-${BASE_DIR}/lib/uninstall-tools vscode $failure_log
+${BASE_DIR}/lib/uninstall-tools vscode $failure_log $manual_log
 
 # Phase 3: Cursor extensions
 echo -e "\n${YELLOW}Phase 3:${NC} Cursor extensions"
-${BASE_DIR}/lib/uninstall-tools cursor $failure_log
+${BASE_DIR}/lib/uninstall-tools cursor $failure_log $manual_log
 
 # Phase 4: Mac App Store apps
 echo -e "\n${YELLOW}Phase 4:${NC} Mac App Store apps"
-${BASE_DIR}/lib/uninstall-tools mas $failure_log
+${BASE_DIR}/lib/uninstall-tools mas $failure_log $manual_log
 
 # Phase 5: Python tools (via uv)
 echo -e "\n${YELLOW}Phase 5:${NC} Python tools"
-${BASE_DIR}/lib/uninstall-tools uv $failure_log
+${BASE_DIR}/lib/uninstall-tools uv $failure_log $manual_log
 
 # Phase 6: Google Cloud components (before removing gcloud-cli cask)
 echo -e "\n${YELLOW}Phase 6:${NC} Google Cloud components"
-${BASE_DIR}/lib/uninstall-tools gcloud $failure_log
+${BASE_DIR}/lib/uninstall-tools gcloud $failure_log $manual_log
 
 # Phase 7: NPM packages (before removing node)
 echo -e "\n${YELLOW}Phase 7:${NC} NPM packages"
-${BASE_DIR}/lib/uninstall-tools npm $failure_log
+${BASE_DIR}/lib/uninstall-tools npm $failure_log $manual_log
 
 # Phase 8: Brew casks
 echo -e "\n${YELLOW}Phase 8:${NC} Brew casks"
-${BASE_DIR}/lib/uninstall-tools brew-cask $failure_log
+${BASE_DIR}/lib/uninstall-tools brew-cask $failure_log $manual_log
 
 # Phase 9: Mise-managed tools
 echo -e "\n${YELLOW}Phase 9:${NC} Mise-managed tools"
-${BASE_DIR}/lib/uninstall-tools mise $failure_log
+${BASE_DIR}/lib/uninstall-tools mise $failure_log $manual_log
 
 # Phase 10: Mise version manager
 echo -e "\n${YELLOW}Phase 10:${NC} Mise version manager"
@@ -55,7 +56,7 @@ ${BASE_DIR}/zsh/uninstall
 
 # Phase 12: Brew packages (reverse order)
 echo -e "\n${YELLOW}Phase 12:${NC} Brew packages"
-${BASE_DIR}/lib/uninstall-tools brew --reverse $failure_log
+${BASE_DIR}/lib/uninstall-tools brew --reverse $failure_log $manual_log
 
 # Phase 13: Homebrew
 echo -e "\n${YELLOW}Phase 13:${NC} Homebrew"
@@ -68,9 +69,24 @@ if [[ -f $failure_log ]]; then
     echo -e "${RED}Uninstall complete - the following tools failed:${NC}"
     echo ""
     cat $failure_log
-    echo ""
     rm $failure_log
+    if [[ -f $manual_log ]]; then
+        echo ""
+        echo -e "${YELLOW}Manual installs detected (not managed by brew):${NC}"
+        echo ""
+        cat $manual_log
+        rm $manual_log
+    fi
+    echo ""
     echo -e "${RED}========================================${NC}"
+elif [[ -f $manual_log ]]; then
+    echo -e "${YELLOW}========================================${NC}"
+    echo -e "${YELLOW}Uninstall complete - manual installs detected:${NC}"
+    echo ""
+    cat $manual_log
+    rm $manual_log
+    echo ""
+    echo -e "${YELLOW}========================================${NC}"
 else
     echo -e "${GREEN}========================================${NC}"
     echo -e "${GREEN}Uninstall complete - all tools removed successfully${NC}"
