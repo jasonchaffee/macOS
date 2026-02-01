@@ -18,21 +18,27 @@ version=${package_with_version#*@}
 case $type in
     brew)
         if command -v brew >/dev/null 2>&1; then
+            echo "Installing brew package: $package"
             brew install $package
         fi
         ;;
     brew-cask)
         if command -v brew >/dev/null 2>&1; then
+            echo "Installing brew cask: $package"
             brew install --cask $package
         fi
         ;;
     mise)
         if command -v mise >/dev/null 2>&1; then
+            echo "Installing mise tool: ${package}@${version}"
+            # Ensure plugin is installed first
+            mise plugins install $package 2>/dev/null || true
             mise use -g ${package}@${version}
         fi
         ;;
     npm)
         if command -v npm >/dev/null 2>&1; then
+            echo "Installing npm package: $package"
             npm install -g $package
         fi
         ;;
