@@ -14,19 +14,28 @@ package_with_version=${entry#*:}
 package=${package_with_version%%@*}
 
 case $type in
-    brew|brew-cask)
+    brew)
         if command -v brew >/dev/null 2>&1; then
+            echo "Uninstalling brew package: $package"
             brew uninstall $package
+        fi
+        ;;
+    brew-cask)
+        if command -v brew >/dev/null 2>&1; then
+            echo "Uninstalling brew cask: $package"
+            brew uninstall --cask $package
         fi
         ;;
     mise)
         if command -v mise >/dev/null 2>&1; then
+            echo "Uninstalling mise tool: $package"
             mise unuse -g $package
             mise uninstall --all $package
         fi
         ;;
     npm)
         if command -v npm >/dev/null 2>&1; then
+            echo "Uninstalling npm package: $package"
             npm uninstall -g $package
         fi
         ;;
