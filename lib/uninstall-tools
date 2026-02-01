@@ -44,7 +44,7 @@ echo "$entries" | while read entry; do
         error_lines=$(grep -v "^Uninstalling\|^$" $tmp_output | tail -3)
         if [[ -n "$error_lines" ]]; then
             echo "$error_lines" | while read line; do
-                echo -e "      ${RED}$line${NC}" >> $failure_log
+                echo -e "      ${WHITE}$line${NC}" >> $failure_log
             done
         fi
     elif [[ $exit_code -eq 2 && -n "$manual_log" ]]; then

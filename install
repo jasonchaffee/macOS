@@ -4,6 +4,7 @@ BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
 source ${BASE_DIR}/lib/colors
 failure_log=/tmp/install_failures_$$
 manual_log=/tmp/install_manual_$$
+caveat_log=/tmp/install_caveats_$$
 
 echo -e "${BOLD}${BLUE}Starting macOS install...${NC}"
 echo ""
@@ -21,7 +22,7 @@ fi
 
 # Phase 2: Brew packages
 echo -e "\n${BLUE}Phase 2:${NC} Brew packages"
-${BASE_DIR}/lib/install-tools brew $failure_log $manual_log
+${BASE_DIR}/lib/install-tools brew $failure_log $manual_log $caveat_log
 
 # Phase 3: Shell configs
 echo -e "\n${BLUE}Phase 3:${NC} Shell configs"
@@ -75,48 +76,50 @@ ${BASE_DIR}/vim/install
 # Final summary
 has_failures=false
 has_manual=false
+has_caveats=false
 [[ -f $failure_log ]] && has_failures=true
 [[ -f $manual_log ]] && has_manual=true
-
-# Choose border color based on success/failure
-if [[ "$has_failures" == "true" ]]; then
-    border_color="${RED}"
-else
-    border_color="${GREEN}"
-fi
+[[ -f $caveat_log ]] && has_caveats=true
 
 echo ""
-echo -e "${border_color}========================================${NC}"
-echo -e "${border_color}Install Complete${NC}"
-echo -e "${border_color}========================================${NC}"
+echo -e "${GREEN}========================================${NC}"
+echo -e "${GREEN}${BOLD}Install Complete${NC}"
+echo -e "${GREEN}========================================${NC}"
 
-if [[ "$has_failures" == "true" || "$has_manual" == "true" ]]; then
+if [[ "$has_failures" == "true" || "$has_manual" == "true" || "$has_caveats" == "true" ]]; then
     echo ""
     echo -e "${YELLOW}========================================${NC}"
-    echo -e "${YELLOW}Summary${NC}"
+    echo -e "${YELLOW}${BOLD}Summary${NC}"
     echo -e "${YELLOW}========================================${NC}"
 
     if [[ "$has_failures" == "true" ]]; then
         echo ""
-        echo -e "${RED}Failed:${NC}"
+        echo -e "${BOLD}Failed:${NC}"
         cat $failure_log
         rm $failure_log
     fi
 
     if [[ "$has_manual" == "true" ]]; then
         echo ""
-        echo -e "${YELLOW}Manual Installs (not managed by brew):${NC}"
+        echo -e "${YELLOW}${BOLD}Manual Installs (not managed by brew):${NC}"
         cat $manual_log
         rm $manual_log
     fi
 
+    if [[ "$has_caveats" == "true" ]]; then
+        echo ""
+        echo -e "${CYAN}${BOLD}Caveats (action may be required):${NC}"
+        cat $caveat_log
+        rm $caveat_log
+    fi
+
     echo ""
     if [[ "$has_failures" == "true" ]]; then
-        echo -e "${RED}✗ Some tools failed to install${NC}"
+        echo -e "${RED}✗${NC} ${BOLD}Some tools failed to install${NC}"
     else
-        echo -e "${GREEN}✓ All tools installed successfully${NC}"
+        echo -e "${GREEN}✓${NC} ${BOLD}All tools installed successfully${NC}"
     fi
 else
     echo ""
-    echo -e "${GREEN}✓ All tools installed successfully${NC}"
+    echo -e "${GREEN}✓${NC} ${BOLD}All tools installed successfully${NC}"
 fi

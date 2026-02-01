@@ -76,16 +76,17 @@ load test_helper
     grep -q 'Uninstall Complete' "${PROJECT_DIR}/uninstall"
 }
 
-@test "install script has colored summary borders" {
-    grep -q 'border_color=' "${PROJECT_DIR}/install"
-    grep -q 'border_color.*GREEN' "${PROJECT_DIR}/install"
-    grep -q 'border_color.*RED' "${PROJECT_DIR}/install"
+@test "install script has green summary banner" {
+    grep -q 'GREEN.*Install Complete' "${PROJECT_DIR}/install"
 }
 
-@test "uninstall script has colored summary borders" {
-    grep -q 'border_color=' "${PROJECT_DIR}/uninstall"
-    grep -q 'border_color.*GREEN' "${PROJECT_DIR}/uninstall"
-    grep -q 'border_color.*RED' "${PROJECT_DIR}/uninstall"
+@test "uninstall script has green summary banner" {
+    grep -q 'GREEN.*Uninstall Complete' "${PROJECT_DIR}/uninstall"
+}
+
+@test "install script captures caveats" {
+    grep -q 'caveat_log=' "${PROJECT_DIR}/install"
+    grep -q 'Caveats' "${PROJECT_DIR}/install"
 }
 
 @test "zshrc sources .zshrc.local for machine-specific config" {
