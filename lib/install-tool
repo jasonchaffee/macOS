@@ -40,7 +40,8 @@ case $type in
                 exit 0
             fi
             # Check if app exists in /Applications (manual install)
-            app_name=$(brew info --cask $package 2>/dev/null | grep -A1 "Artifacts:" | tail -1 | sed 's/.*(\(.*\.app\)).*/\1/' | xargs)
+            # Use JSON output to get exact app name (e.g., iterm2 → iTerm.app)
+            app_name=$(brew info --json=v2 --cask $package 2>/dev/null | jq -r '.casks[0].artifacts[] | .app? // empty | .[0]' 2>/dev/null | head -1)
             if [[ -n "$app_name" && -d "/Applications/$app_name" ]]; then
                 echo -e "${GREEN}Already installed (manual):${NC} ${BOLD}$package${NC} → /Applications/$app_name"
                 exit 0
