@@ -22,6 +22,11 @@ version=${package_with_version#*@}
 case $type in
     brew)
         if command -v brew >/dev/null 2>&1; then
+            # Check if already installed
+            if brew list $package &>/dev/null; then
+                echo -e "${GREEN}Already installed:${NC} ${BOLD}$package${NC}"
+                exit 0
+            fi
             echo -e "${CYAN}Installing brew package:${NC} ${BOLD}$package${NC}"
             brew install $package
             exit $?
@@ -29,6 +34,17 @@ case $type in
         ;;
     brew-cask)
         if command -v brew >/dev/null 2>&1; then
+            # Check if already installed via brew
+            if brew list --cask $package &>/dev/null; then
+                echo -e "${GREEN}Already installed (brew):${NC} ${BOLD}$package${NC}"
+                exit 0
+            fi
+            # Check if app exists in /Applications (manual install)
+            app_name=$(brew info --cask $package 2>/dev/null | grep -A1 "Artifacts:" | tail -1 | sed 's/.*(\(.*\.app\)).*/\1/' | xargs)
+            if [[ -n "$app_name" && -d "/Applications/$app_name" ]]; then
+                echo -e "${GREEN}Already installed (manual):${NC} ${BOLD}$package${NC} → /Applications/$app_name"
+                exit 0
+            fi
             echo -e "${CYAN}Installing brew cask:${NC} ${BOLD}$package${NC}"
             brew install --cask $package
             exit $?
@@ -45,6 +61,11 @@ case $type in
         ;;
     npm)
         if command -v npm >/dev/null 2>&1; then
+            # Check if already installed globally
+            if npm list -g $package &>/dev/null; then
+                echo -e "${GREEN}Already installed:${NC} ${BOLD}$package${NC}"
+                exit 0
+            fi
             echo -e "${CYAN}Installing npm package:${NC} ${BOLD}$package${NC}"
             npm install -g $package
             exit $?
@@ -59,6 +80,11 @@ case $type in
         ;;
     vscode)
         if command -v code >/dev/null 2>&1; then
+            # Check if already installed
+            if code --list-extensions 2>/dev/null | grep -qi "^${package}$"; then
+                echo -e "${GREEN}Already installed:${NC} ${BOLD}$package${NC}"
+                exit 0
+            fi
             echo -e "${CYAN}Installing VS Code extension:${NC} ${BOLD}$package${NC}"
             code --install-extension $package
             exit $?
@@ -66,6 +92,11 @@ case $type in
         ;;
     cursor)
         if command -v cursor >/dev/null 2>&1; then
+            # Check if already installed
+            if cursor --list-extensions 2>/dev/null | grep -qi "^${package}$"; then
+                echo -e "${GREEN}Already installed:${NC} ${BOLD}$package${NC}"
+                exit 0
+            fi
             echo -e "${CYAN}Installing Cursor extension:${NC} ${BOLD}$package${NC}"
             cursor --install-extension $package
             exit $?
@@ -73,6 +104,11 @@ case $type in
         ;;
     uv)
         if command -v uv >/dev/null 2>&1; then
+            # Check if already installed
+            if uv tool list 2>/dev/null | grep -q "^$package "; then
+                echo -e "${GREEN}Already installed:${NC} ${BOLD}$package${NC}"
+                exit 0
+            fi
             echo -e "${CYAN}Installing Python tool:${NC} ${BOLD}$package${NC}"
             uv tool install $package
             exit $?
