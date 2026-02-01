@@ -59,6 +59,13 @@ Tools with custom configs get their own directory with `install`/`uninstall` scr
 
 Tests use [bats-core](https://github.com/bats-core/bats-core) (installed via `brew:bats-core`).
 
+## Features
+
+- **Smart detection** - Skips already-installed tools (no unnecessary downloads)
+- **Manual install detection** - Identifies apps installed outside of brew
+- **Colored output** - Phase headers, success/failure indicators
+- **Summary report** - Shows failures (red ✗) and manual installs (yellow ⚠)
+
 ## What's Installed
 
 See [tools.conf](tools.conf) for the full list of tools with descriptions.

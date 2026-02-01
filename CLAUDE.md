@@ -75,6 +75,13 @@ Run tests with `./test`. Tests are in `tests/` directory using bats-core:
 - `lib_scripts.bats` - Checks lib scripts structure
 - `main_scripts.bats` - Validates install/uninstall phases
 
+### Exit Codes
+
+The `lib/install-tool` and `lib/uninstall-tool` scripts use exit codes:
+- `0` - Success (or already installed/not installed)
+- `1` - Failure
+- `2` - Manual install detected (app in /Applications but not managed by brew)
+
 ### Environment Variables
 
 The `git/install` script uses optional environment variables:
