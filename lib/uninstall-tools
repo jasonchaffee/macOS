@@ -4,6 +4,8 @@
 # Uninstalls all tools of the given type from tools.conf
 
 BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
+source ${BASE_DIR}/colors
+
 type=$1
 
 # Parse optional args
@@ -29,6 +31,6 @@ echo "$entries" | while read entry; do
         clean=${entry%%#*}
         clean=${clean%% *}
         pkg=${clean#*:}
-        echo "  ${type}: $pkg" >> $failure_log
+        echo -e "  ${RED}✗${NC} ${type}: ${BOLD}$pkg${NC}" >> $failure_log
     fi
 done

@@ -4,6 +4,9 @@
 # Types: brew, brew-cask, mise, npm
 # Returns: 0 on success, 1 on failure
 
+BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
+source ${BASE_DIR}/colors
+
 entry=$1
 # Strip comments and whitespace
 entry=${entry%%#*}
@@ -17,21 +20,21 @@ package=${package_with_version%%@*}
 case $type in
     brew)
         if command -v brew >/dev/null 2>&1; then
-            echo "Uninstalling brew package: $package"
+            echo -e "${YELLOW}Uninstalling brew package:${NC} ${BOLD}$package${NC}"
             brew uninstall $package
             exit $?
         fi
         ;;
     brew-cask)
         if command -v brew >/dev/null 2>&1; then
-            echo "Uninstalling brew cask: $package"
+            echo -e "${YELLOW}Uninstalling brew cask:${NC} ${BOLD}$package${NC}"
             brew uninstall --cask $package
             exit $?
         fi
         ;;
     mise)
         if command -v mise >/dev/null 2>&1; then
-            echo "Uninstalling mise tool: $package"
+            echo -e "${YELLOW}Uninstalling mise tool:${NC} ${BOLD}$package${NC}"
             mise unuse -g $package
             mise uninstall --all --yes $package
             exit $?
@@ -39,13 +42,13 @@ case $type in
         ;;
     npm)
         if command -v npm >/dev/null 2>&1; then
-            echo "Uninstalling npm package: $package"
+            echo -e "${YELLOW}Uninstalling npm package:${NC} ${BOLD}$package${NC}"
             npm uninstall -g $package
             exit $?
         fi
         ;;
     *)
-        echo "Unknown type: $type (entry: $1)"
+        echo -e "${RED}Unknown type:${NC} $type (entry: $1)"
         exit 1
         ;;
 esac

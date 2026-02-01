@@ -4,6 +4,8 @@
 # Installs all tools of the given type from tools.conf
 
 BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
+source ${BASE_DIR}/colors
+
 type=$1
 failure_log=$2
 
@@ -14,6 +16,6 @@ grep "^${type}:" ${BASE_DIR}/../tools.conf | while read entry; do
         clean=${entry%%#*}
         clean=${clean%% *}
         pkg=${clean#*:}
-        echo "  ${type}: $pkg" >> $failure_log
+        echo -e "  ${RED}✗${NC} ${type}: ${BOLD}$pkg${NC}" >> $failure_log
     fi
 done

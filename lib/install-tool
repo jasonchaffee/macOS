@@ -4,6 +4,9 @@
 # Types: brew, brew-cask, mise, npm
 # Returns: 0 on success, 1 on failure
 
+BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
+source ${BASE_DIR}/colors
+
 entry=$1
 # Strip comments and whitespace
 entry=${entry%%#*}
@@ -19,21 +22,21 @@ version=${package_with_version#*@}
 case $type in
     brew)
         if command -v brew >/dev/null 2>&1; then
-            echo "Installing brew package: $package"
+            echo -e "${CYAN}Installing brew package:${NC} ${BOLD}$package${NC}"
             brew install $package
             exit $?
         fi
         ;;
     brew-cask)
         if command -v brew >/dev/null 2>&1; then
-            echo "Installing brew cask: $package"
+            echo -e "${CYAN}Installing brew cask:${NC} ${BOLD}$package${NC}"
             brew install --cask $package
             exit $?
         fi
         ;;
     mise)
         if command -v mise >/dev/null 2>&1; then
-            echo "Installing mise tool: ${package}@${version}"
+            echo -e "${CYAN}Installing mise tool:${NC} ${BOLD}${package}@${version}${NC}"
             # Ensure plugin is installed first
             mise plugins install $package 2>/dev/null || true
             mise use -g ${package}@${version}
@@ -42,13 +45,13 @@ case $type in
         ;;
     npm)
         if command -v npm >/dev/null 2>&1; then
-            echo "Installing npm package: $package"
+            echo -e "${CYAN}Installing npm package:${NC} ${BOLD}$package${NC}"
             npm install -g $package
             exit $?
         fi
         ;;
     *)
-        echo "Unknown type: $type (entry: $1)"
+        echo -e "${RED}Unknown type:${NC} $type (entry: $1)"
         exit 1
         ;;
 esac

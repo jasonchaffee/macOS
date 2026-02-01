@@ -1,44 +1,56 @@
 #!/usr/bin/env zsh
 
 BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
+source ${BASE_DIR}/lib/colors
 failure_log=/tmp/uninstall_summary_$$
 
+echo -e "${BOLD}${YELLOW}Starting macOS uninstall...${NC}"
+echo ""
+
 # Phase 1: Custom configs
+echo -e "${YELLOW}Phase 1:${NC} Custom configs"
 ${BASE_DIR}/vim/uninstall
 ${BASE_DIR}/git/uninstall
 
 # Phase 2: NPM packages (before removing node)
+echo -e "\n${YELLOW}Phase 2:${NC} NPM packages"
 ${BASE_DIR}/lib/uninstall-tools npm $failure_log
 
 # Phase 3: Brew casks
+echo -e "\n${YELLOW}Phase 3:${NC} Brew casks"
 ${BASE_DIR}/lib/uninstall-tools brew-cask $failure_log
 
 # Phase 4: Mise-managed tools
+echo -e "\n${YELLOW}Phase 4:${NC} Mise-managed tools"
 ${BASE_DIR}/lib/uninstall-tools mise $failure_log
 
 # Phase 5: Mise version manager
+echo -e "\n${YELLOW}Phase 5:${NC} Mise version manager"
 ${BASE_DIR}/mise/uninstall
 
 # Phase 6: Shell configs
+echo -e "\n${YELLOW}Phase 6:${NC} Shell configs"
 ${BASE_DIR}/bash/uninstall
 ${BASE_DIR}/zsh/uninstall
 
 # Phase 7: Brew packages (reverse order)
+echo -e "\n${YELLOW}Phase 7:${NC} Brew packages"
 ${BASE_DIR}/lib/uninstall-tools brew --reverse $failure_log
 
 # Phase 8: Homebrew
+echo -e "\n${YELLOW}Phase 8:${NC} Homebrew"
 ${BASE_DIR}/brew/uninstall
 
 # Final summary
 echo ""
-echo "========================================"
+echo -e "${BOLD}========================================${NC}"
 if [[ -f $failure_log ]]; then
-    echo "Uninstall complete - the following tools failed:"
+    echo -e "${RED}Uninstall complete - the following tools failed:${NC}"
     echo ""
     cat $failure_log
     echo ""
     rm $failure_log
 else
-    echo "Uninstall complete - all tools removed successfully"
+    echo -e "${GREEN}Uninstall complete - all tools removed successfully${NC}"
 fi
-echo "========================================"
+echo -e "${BOLD}========================================${NC}"
