@@ -20,10 +20,31 @@ if command -v mise >/dev/null 2>&1; then
     eval "$(mise activate zsh)"
 fi
 
- # Source .profile, if it exists
- if [[ -f ${HOME}/.profile ]]; then
-     . ${HOME}/.profile
- fi
+# Source .profile, if it exists
+if [[ -f ${HOME}/.profile ]]; then
+    . ${HOME}/.profile
+fi
+
+# -------------------------------------------------------------------
+# Aliases - Modern CLI Replacements
+# -------------------------------------------------------------------
+# These aliases replace legacy commands with modern alternatives that
+# provide better output, colors, and features while maintaining
+# familiar command names for muscle memory.
+
+# eza - modern ls replacement (icons, colors, git status)
+# https://github.com/eza-community/eza
+alias ls='eza'                    # basic listing with colors
+alias ll='eza -l --git'           # long format with git status
+alias la='eza -la --git'          # long format including hidden files
+alias tree='eza --tree'           # tree view (replaces standalone tree command)
+
+# bat - modern cat replacement (syntax highlighting, line numbers)
+# https://github.com/sharkdp/bat
+alias cat='bat --paging=never'    # disable paging for pipe compatibility
+
+# colordiff - colorized diff output
+alias diff='colordiff'
 
 # -------------------------------------------------------------------
 # Antidote ZSH Plugin Manager

@@ -65,6 +65,7 @@ Tests use [bats-core](https://github.com/bats-core/bats-core) (installed via `br
 - **Manual install detection** - Identifies apps installed outside of brew
 - **Colored output** - Phase headers, success/failure indicators
 - **Summary report** - Shows failures (red ✗) and manual installs (yellow ⚠)
+- **Modern CLI aliases** - Replaces legacy commands with faster alternatives (see zsh/zshrc)
 
 ## What's Installed
 
