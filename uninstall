@@ -2,36 +2,28 @@
 
 BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
 
-# Uninstall tools with custom configs first
+# Phase 1: Custom configs
 ${BASE_DIR}/vim/uninstall
 ${BASE_DIR}/git/uninstall
 
-# Uninstall npm packages (before removing node)
-while read entry; do
-    ${BASE_DIR}/lib/uninstall-tool "$entry" </dev/null
-done < <(grep '^npm:' ${BASE_DIR}/tools.conf)
+# Phase 2: NPM packages (before removing node)
+${BASE_DIR}/lib/uninstall-tools npm
 
-# Uninstall brew casks
-while read entry; do
-    ${BASE_DIR}/lib/uninstall-tool "$entry" </dev/null
-done < <(grep '^brew-cask:' ${BASE_DIR}/tools.conf)
+# Phase 3: Brew casks
+${BASE_DIR}/lib/uninstall-tools brew-cask
 
-# Uninstall mise-managed tools
-while read entry; do
-    ${BASE_DIR}/lib/uninstall-tool "$entry" </dev/null
-done < <(grep '^mise:' ${BASE_DIR}/tools.conf)
+# Phase 4: Mise-managed tools
+${BASE_DIR}/lib/uninstall-tools mise
 
-# Uninstall mise
+# Phase 5: Mise version manager
 ${BASE_DIR}/mise/uninstall
 
-# Uninstall shell configs
+# Phase 6: Shell configs
 ${BASE_DIR}/bash/uninstall
 ${BASE_DIR}/zsh/uninstall
 
-# Uninstall brew packages (antidote before brew)
-while read entry; do
-    ${BASE_DIR}/lib/uninstall-tool "$entry" </dev/null
-done < <(grep '^brew:' ${BASE_DIR}/tools.conf | tail -r)
+# Phase 7: Brew packages (reverse order)
+${BASE_DIR}/lib/uninstall-tools brew --reverse
 
-# Bootstrap cleanup: brew last
+# Phase 8: Homebrew
 ${BASE_DIR}/brew/uninstall

@@ -1,0 +1,11 @@
+#!/usr/bin/env zsh
+
+# Usage: install-tools <type>
+# Installs all tools of the given type from tools.conf
+
+BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
+type=$1
+
+while read entry; do
+    ${BASE_DIR}/install-tool "$entry" </dev/null
+done < <(grep "^${type}:" ${BASE_DIR}/../tools.conf)

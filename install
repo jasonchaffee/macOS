@@ -2,7 +2,7 @@
 
 BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
 
-# Bootstrap: brew must be first
+# Phase 1: Bootstrap Homebrew
 ${BASE_DIR}/brew/install
 
 # Setup brew in PATH for this session
@@ -12,39 +12,28 @@ elif [[ -f /usr/local/bin/brew ]]; then
     eval "$(/usr/local/bin/brew shellenv)"
 fi
 
-# Install tools from tools.conf (in order, respecting dependencies)
-# Phase 1: brew packages (curl early for SSL)
-while read entry; do
-    ${BASE_DIR}/lib/install-tool "$entry" </dev/null
-done < <(grep '^brew:' ${BASE_DIR}/tools.conf)
+# Phase 2: Brew packages
+${BASE_DIR}/lib/install-tools brew
 
-# Phase 2: shell configs
+# Phase 3: Shell configs
 ${BASE_DIR}/bash/install
 ${BASE_DIR}/zsh/install
 
-# Phase 3: mise (version manager)
+# Phase 4: Mise version manager
 ${BASE_DIR}/mise/install
-
-# Activate mise for this session
 if command -v mise >/dev/null 2>&1; then
     eval "$(mise activate zsh)"
 fi
 
-# Phase 4: mise-managed tools
-while read entry; do
-    ${BASE_DIR}/lib/install-tool "$entry" </dev/null
-done < <(grep '^mise:' ${BASE_DIR}/tools.conf)
+# Phase 5: Mise-managed tools
+${BASE_DIR}/lib/install-tools mise
 
-# Phase 5: npm packages (requires node from phase 4)
-while read entry; do
-    ${BASE_DIR}/lib/install-tool "$entry" </dev/null
-done < <(grep '^npm:' ${BASE_DIR}/tools.conf)
+# Phase 6: NPM packages
+${BASE_DIR}/lib/install-tools npm
 
-# Phase 6: brew casks
-while read entry; do
-    ${BASE_DIR}/lib/install-tool "$entry" </dev/null
-done < <(grep '^brew-cask:' ${BASE_DIR}/tools.conf)
+# Phase 7: Brew casks
+${BASE_DIR}/lib/install-tools brew-cask
 
-# Phase 7: tools with custom configs
+# Phase 8: Custom configs
 ${BASE_DIR}/git/install
 ${BASE_DIR}/vim/install
