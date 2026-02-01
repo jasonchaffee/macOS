@@ -30,7 +30,7 @@ case $type in
         if command -v mise >/dev/null 2>&1; then
             echo "Uninstalling mise tool: $package"
             mise unuse -g $package
-            mise uninstall --all $package
+            mise uninstall --all --yes $package
         fi
         ;;
     npm)
