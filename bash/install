@@ -1,11 +1,7 @@
 #!/usr/bin/env zsh
 
 BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
+source ${BASE_DIR}/../lib/backup
 
-if [[ -s "${HOME}/.bashrc " ]]; then
-    echo "Backing up .bashrc"
-    cp -v ${HOME}/.bashrc ${HOME}/.bashrc.bash.bak
-fi
-
-echo "Installing .bashrc"
-cp -v ${BASE_DIR}/bashrc ${HOME}/.bashrc
+# Install with merge/replace prompt if files differ
+install_with_backup "${BASE_DIR}/bashrc" "${HOME}/.bashrc"

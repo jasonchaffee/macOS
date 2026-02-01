@@ -1,0 +1,155 @@
+#!/usr/bin/env zsh
+
+# Backup utility for dotfiles
+# Creates timestamped backups to prevent losing configuration
+#
+# Usage: source this file, then call backup_file or install_with_backup
+#
+# Functions:
+#   backup_file <filepath>           - Create timestamped backup
+#   install_with_backup <src> <dest> - Install with merge/replace prompt
+#   list_backups <filename>          - List all backups for a file
+#   restore_backup <filename> <ts>   - Restore a specific backup
+#
+# Backups are stored in ~/.dotfiles_backups/<filename>/<timestamp>
+# This preserves history of all backups, not just the most recent one.
+
+BACKUP_DIR="${HOME}/.dotfiles_backups"
+
+# ANSI colors (in case lib/colors not loaded)
+_RED='\033[0;31m'
+_GREEN='\033[0;32m'
+_YELLOW='\033[1;33m'
+_BLUE='\033[0;34m'
+_CYAN='\033[0;36m'
+_BOLD='\033[1m'
+_NC='\033[0m'
+
+backup_file() {
+    local file="$1"
+
+    # Skip if file doesn't exist or is empty
+    [[ ! -s "$file" ]] && return 0
+
+    local filename=$(basename "$file")
+    local timestamp=$(date +%Y%m%d_%H%M%S)
+    local backup_subdir="${BACKUP_DIR}/${filename}"
+
+    # Create backup directory if it doesn't exist
+    mkdir -p "$backup_subdir"
+
+    # Copy with timestamp
+    local backup_path="${backup_subdir}/${timestamp}"
+    cp -p "$file" "$backup_path"
+    echo -e "${_CYAN}Backed up${_NC} ${filename} → ~/.dotfiles_backups/${filename}/${timestamp}"
+}
+
+# Install a file with merge/replace prompt if destination exists and differs
+install_with_backup() {
+    local src="$1"
+    local dest="$2"
+    local filename=$(basename "$dest")
+
+    # If destination doesn't exist or is empty, just install
+    if [[ ! -s "$dest" ]]; then
+        echo -e "${_GREEN}Installing${_NC} ${filename}"
+        cp -v "$src" "$dest"
+        return 0
+    fi
+
+    # If files are identical, skip
+    if diff -q "$src" "$dest" >/dev/null 2>&1; then
+        echo -e "${_GREEN}Already installed${_NC} ${filename} (no changes)"
+        return 0
+    fi
+
+    # Files differ - backup and prompt user
+    backup_file "$dest"
+
+    echo ""
+    echo -e "${_YELLOW}${_BOLD}${filename} differs from repo version${_NC}"
+    echo ""
+    echo "Options:"
+    echo "  1) Replace - Use repo version (your customizations backed up)"
+    echo "  2) Keep    - Keep current version, skip installing repo version"
+    echo "  3) Merge   - Open diff to manually merge (requires editing)"
+    echo "  4) Diff    - Show differences first, then ask again"
+    echo ""
+    echo -n "Choice [1-4]: "
+    read choice
+
+    case "$choice" in
+        1|r|R|replace)
+            echo -e "${_BLUE}Replacing${_NC} ${filename} with repo version"
+            cp "$src" "$dest"
+            ;;
+        2|k|K|keep)
+            echo -e "${_YELLOW}Keeping${_NC} current ${filename}"
+            ;;
+        3|m|M|merge)
+            # Create temp file for merge
+            local merged="/tmp/${filename}.merged.$$"
+            cp "$dest" "$merged"
+            echo -e "${_CYAN}Opening merge...${_NC}"
+            echo "Your file is on the left, repo version on the right"
+            if command -v code >/dev/null 2>&1; then
+                code --diff "$dest" "$src" --wait
+            elif command -v vimdiff >/dev/null 2>&1; then
+                vimdiff "$dest" "$src"
+            else
+                echo "No diff tool found. Showing diff:"
+                diff -u "$dest" "$src" | head -50
+                echo ""
+                echo "Manually edit ${dest} to merge changes"
+            fi
+            ;;
+        4|d|D|diff)
+            echo ""
+            echo -e "${_BOLD}Differences (current vs repo):${_NC}"
+            if command -v delta >/dev/null 2>&1; then
+                diff -u "$dest" "$src" | delta
+            elif command -v colordiff >/dev/null 2>&1; then
+                diff -u "$dest" "$src" | colordiff
+            else
+                diff -u "$dest" "$src"
+            fi
+            echo ""
+            # Recursive call to ask again
+            install_with_backup "$src" "$dest"
+            ;;
+        *)
+            echo -e "${_YELLOW}Invalid choice. Keeping current ${filename}${_NC}"
+            ;;
+    esac
+}
+
+# List backups for a file
+list_backups() {
+    local filename="$1"
+    local backup_subdir="${BACKUP_DIR}/${filename}"
+
+    if [[ -d "$backup_subdir" ]]; then
+        echo "Backups for ${filename}:"
+        ls -la "$backup_subdir"
+    else
+        echo "No backups found for ${filename}"
+    fi
+}
+
+# Restore a specific backup
+restore_backup() {
+    local filename="$1"
+    local timestamp="$2"
+    local target="${HOME}/${filename}"
+    local backup_path="${BACKUP_DIR}/${filename}/${timestamp}"
+
+    if [[ -f "$backup_path" ]]; then
+        # Backup current before restoring
+        backup_file "$target"
+        cp -p "$backup_path" "$target"
+        echo "Restored ${filename} from ${timestamp}"
+    else
+        echo "Backup not found: ${backup_path}"
+        return 1
+    fi
+}

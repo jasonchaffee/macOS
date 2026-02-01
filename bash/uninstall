@@ -1,8 +1,10 @@
 #!/usr/bin/env zsh
-if [[ -s "${HOME}/.bashrc " ]]; then
-    echo "Backing up .bashrc"
-    cp -v ${HOME}/.bashrc ${HOME}/.bashrc.bash.bak
-fi
+
+BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
+source ${BASE_DIR}/../lib/backup
+
+# Backup before removing
+backup_file "${HOME}/.bashrc"
 
 echo "Uninstalling .bashrc"
 rm -f ${HOME}/.bashrc

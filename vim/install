@@ -1,11 +1,7 @@
 #!/usr/bin/env zsh
 
 BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
+source ${BASE_DIR}/../lib/backup
 
-if [[ -s "${HOME}/.vimrc " ]]; then
-    echo "Backing up .vimrc"
-    cp -v ${HOME}/.vimrc ${HOME}/.vimrc.vim.bak
-fi
-
-echo "Installing .vimrc"
-cp -v ${BASE_DIR}/vimrc ${HOME}/.vimrc
+# Install with merge/replace prompt if files differ
+install_with_backup "${BASE_DIR}/vimrc" "${HOME}/.vimrc"

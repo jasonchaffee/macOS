@@ -1,8 +1,10 @@
 #!/usr/bin/env zsh
-if [[ -s "${HOME}/.vimrc " ]]; then
-    echo "Backing up .vimrc"
-    cp -v ${HOME}/.vimrc ${HOME}/.vimrc.vim.bak
-fi
+
+BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
+source ${BASE_DIR}/../lib/backup
+
+# Backup before removing
+backup_file "${HOME}/.vimrc"
 
 echo "Uninstalling .vimrc"
 rm -f ${HOME}/.vimrc

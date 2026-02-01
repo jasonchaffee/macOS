@@ -1,15 +1,13 @@
 #!/usr/bin/env zsh
 
 BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
+source ${BASE_DIR}/../lib/backup
 
-if [[ -s "${HOME}/.gitignore" ]]; then
-    echo "Backing up .gitignore"
-    cp -v ${HOME}/.gitignore ${HOME}/.gitignore.git.bak
-fi
+# Install with merge/replace prompt if files differ
+install_with_backup "${BASE_DIR}/gitignore" "${HOME}/.gitignore"
 
-echo "Installing .gitignore"
-cp -v ${BASE_DIR}/gitignore ${HOME}/.gitignore
-
+# Backup gitconfig before modifying (git config commands modify in-place)
+backup_file "${HOME}/.gitconfig"
 
 echo "Configuring git..."
 echo "User..."
