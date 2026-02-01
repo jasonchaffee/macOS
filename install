@@ -5,6 +5,13 @@ BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
 # Bootstrap: brew must be first
 ${BASE_DIR}/brew/install
 
+# Setup brew in PATH for this session
+if [[ -f /opt/homebrew/bin/brew ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [[ -f /usr/local/bin/brew ]]; then
+    eval "$(/usr/local/bin/brew shellenv)"
+fi
+
 # Install tools from tools.conf (in order, respecting dependencies)
 # Phase 1: brew packages (curl early for SSL)
 grep '^brew:' ${BASE_DIR}/tools.conf | while read entry; do
@@ -17,13 +24,16 @@ ${BASE_DIR}/zsh/install
 
 # Phase 3: mise (version manager)
 ${BASE_DIR}/mise/install
-. ${HOME}/.zshrc
+
+# Activate mise for this session
+if command -v mise >/dev/null 2>&1; then
+    eval "$(mise activate zsh)"
+fi
 
 # Phase 4: mise-managed tools
 grep '^mise:' ${BASE_DIR}/tools.conf | while read entry; do
     ${BASE_DIR}/lib/install-tool "$entry"
 done
-. ${HOME}/.zshrc
 
 # Phase 5: npm packages (requires node from phase 4)
 grep '^npm:' ${BASE_DIR}/tools.conf | while read entry; do

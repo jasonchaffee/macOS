@@ -1,5 +1,16 @@
 #!/usr/bin/env zsh
-/bin/bash -c "$(curl -fsSL --insecure https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+
+# Install Homebrew if not present
+if ! command -v brew >/dev/null 2>&1; then
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
+
+# Setup brew in PATH for this session (needed on Apple Silicon)
+if [[ -f /opt/homebrew/bin/brew ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [[ -f /usr/local/bin/brew ]]; then
+    eval "$(/usr/local/bin/brew shellenv)"
+fi
 
 if command -v brew >/dev/null 2>&1; then
     echo "Turning off brew analytics"

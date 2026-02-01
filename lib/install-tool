@@ -4,6 +4,11 @@
 # Types: brew, brew-cask, mise, npm
 
 entry=$1
+# Strip comments and whitespace
+entry=${entry%%#*}
+entry=${entry%% *}
+entry=${entry%%	*}
+
 type=${entry%%:*}
 package_with_version=${entry#*:}
 package=${package_with_version%%@*}

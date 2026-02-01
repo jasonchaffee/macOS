@@ -4,6 +4,22 @@ if [[ -f /etc/zshrc ]]; then
 	. /etc/zshrc
 fi
 
+# -------------------------------------------------------------------
+# Homebrew
+# -------------------------------------------------------------------
+if [[ -f /opt/homebrew/bin/brew ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [[ -f /usr/local/bin/brew ]]; then
+    eval "$(/usr/local/bin/brew shellenv)"
+fi
+
+# -------------------------------------------------------------------
+# Mise Version Manager
+# -------------------------------------------------------------------
+if command -v mise >/dev/null 2>&1; then
+    eval "$(mise activate zsh)"
+fi
+
  # Source .profile, if it exists
  if [[ -f ${HOME}/.profile ]]; then
      . ${HOME}/.profile
