@@ -14,9 +14,9 @@ fi
 
 # Install tools from tools.conf (in order, respecting dependencies)
 # Phase 1: brew packages (curl early for SSL)
-grep '^brew:' ${BASE_DIR}/tools.conf | while read entry; do
+while read entry; do
     ${BASE_DIR}/lib/install-tool "$entry"
-done
+done < <(grep '^brew:' ${BASE_DIR}/tools.conf)
 
 # Phase 2: shell configs
 ${BASE_DIR}/bash/install
@@ -31,19 +31,19 @@ if command -v mise >/dev/null 2>&1; then
 fi
 
 # Phase 4: mise-managed tools
-grep '^mise:' ${BASE_DIR}/tools.conf | while read entry; do
+while read entry; do
     ${BASE_DIR}/lib/install-tool "$entry"
-done
+done < <(grep '^mise:' ${BASE_DIR}/tools.conf)
 
 # Phase 5: npm packages (requires node from phase 4)
-grep '^npm:' ${BASE_DIR}/tools.conf | while read entry; do
+while read entry; do
     ${BASE_DIR}/lib/install-tool "$entry"
-done
+done < <(grep '^npm:' ${BASE_DIR}/tools.conf)
 
 # Phase 6: brew casks
-grep '^brew-cask:' ${BASE_DIR}/tools.conf | while read entry; do
+while read entry; do
     ${BASE_DIR}/lib/install-tool "$entry"
-done
+done < <(grep '^brew-cask:' ${BASE_DIR}/tools.conf)
 
 # Phase 7: tools with custom configs
 ${BASE_DIR}/git/install

@@ -37,7 +37,6 @@ case $type in
         fi
         ;;
     *)
-        echo "Unknown type: $type"
-        exit 1
+        echo "Unknown type: $type (entry: $1)"
         ;;
 esac
