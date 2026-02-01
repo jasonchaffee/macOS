@@ -1,17 +1,22 @@
 #!/usr/bin/env zsh
 
-# Usage: uninstall-tools <type> [--reverse]
+# Usage: uninstall-tools <type> [--reverse] [failure_log]
 # Uninstalls all tools of the given type from tools.conf
-# Tracks and reports failures at the end
 
 BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
 type=$1
-reverse=$2
 
-typeset -a failures
+# Parse optional args
+if [[ "$2" == "--reverse" ]]; then
+    reverse=true
+    failure_log=$3
+else
+    reverse=false
+    failure_log=$2
+fi
 
 # Get tool entries, optionally reversed
-if [[ "$reverse" == "--reverse" ]]; then
+if [[ "$reverse" == "true" ]]; then
     entries=$(grep "^${type}:" ${BASE_DIR}/../tools.conf | tail -r)
 else
     entries=$(grep "^${type}:" ${BASE_DIR}/../tools.conf)
@@ -24,20 +29,6 @@ echo "$entries" | while read entry; do
         clean=${entry%%#*}
         clean=${clean%% *}
         pkg=${clean#*:}
-        echo "$pkg" >> /tmp/uninstall_failures_$$
+        echo "  ${type}: $pkg" >> $failure_log
     fi
 done
-
-# Report results
-if [[ -f /tmp/uninstall_failures_$$ ]]; then
-    echo ""
-    echo "=== ${type} uninstall failures ==="
-    cat /tmp/uninstall_failures_$$  | while read pkg; do
-        echo "  - $pkg"
-    done
-    count=$(wc -l < /tmp/uninstall_failures_$$)
-    rm /tmp/uninstall_failures_$$
-    exit $count
-fi
-
-exit 0

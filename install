@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
-total_failures=0
+failure_log=/tmp/install_summary_$$
 
 # Phase 1: Bootstrap Homebrew
 ${BASE_DIR}/brew/install
@@ -14,8 +14,7 @@ elif [[ -f /usr/local/bin/brew ]]; then
 fi
 
 # Phase 2: Brew packages
-${BASE_DIR}/lib/install-tools brew
-((total_failures += $?))
+${BASE_DIR}/lib/install-tools brew $failure_log
 
 # Phase 3: Shell configs
 ${BASE_DIR}/bash/install
@@ -28,16 +27,13 @@ if command -v mise >/dev/null 2>&1; then
 fi
 
 # Phase 5: Mise-managed tools
-${BASE_DIR}/lib/install-tools mise
-((total_failures += $?))
+${BASE_DIR}/lib/install-tools mise $failure_log
 
 # Phase 6: NPM packages
-${BASE_DIR}/lib/install-tools npm
-((total_failures += $?))
+${BASE_DIR}/lib/install-tools npm $failure_log
 
 # Phase 7: Brew casks
-${BASE_DIR}/lib/install-tools brew-cask
-((total_failures += $?))
+${BASE_DIR}/lib/install-tools brew-cask $failure_log
 
 # Phase 8: Custom configs
 ${BASE_DIR}/git/install
@@ -46,9 +42,13 @@ ${BASE_DIR}/vim/install
 # Final summary
 echo ""
 echo "========================================"
-if [[ $total_failures -eq 0 ]]; then
-    echo "Install complete - all tools installed successfully"
+if [[ -f $failure_log ]]; then
+    echo "Install complete - the following tools failed:"
+    echo ""
+    cat $failure_log
+    echo ""
+    rm $failure_log
 else
-    echo "Install complete - $total_failures tool(s) failed"
+    echo "Install complete - all tools installed successfully"
 fi
 echo "========================================"

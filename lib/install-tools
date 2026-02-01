@@ -1,12 +1,11 @@
 #!/usr/bin/env zsh
 
-# Usage: install-tools <type>
+# Usage: install-tools <type> [failure_log]
 # Installs all tools of the given type from tools.conf
-# Tracks and reports failures at the end
 
 BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
 type=$1
-failure_file=/tmp/install_failures_$$
+failure_log=$2
 
 grep "^${type}:" ${BASE_DIR}/../tools.conf | while read entry; do
     [[ -z "$entry" ]] && continue
@@ -15,20 +14,6 @@ grep "^${type}:" ${BASE_DIR}/../tools.conf | while read entry; do
         clean=${entry%%#*}
         clean=${clean%% *}
         pkg=${clean#*:}
-        echo "$pkg" >> $failure_file
+        echo "  ${type}: $pkg" >> $failure_log
     fi
 done
-
-# Report results
-if [[ -f $failure_file ]]; then
-    echo ""
-    echo "=== ${type} install failures ==="
-    while read pkg; do
-        echo "  - $pkg"
-    done < $failure_file
-    count=$(wc -l < $failure_file)
-    rm $failure_file
-    exit $count
-fi
-
-exit 0
