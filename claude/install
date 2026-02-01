@@ -1,0 +1,28 @@
+#!/usr/bin/env zsh
+
+BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
+source ${BASE_DIR}/../lib/colors
+
+CLAUDE_DIR="${HOME}/.claude"
+
+# Create ~/.claude directory if it doesn't exist
+if [[ ! -d "$CLAUDE_DIR" ]]; then
+    echo -e "${GREEN}Creating${NC} ~/.claude directory"
+    mkdir -p "$CLAUDE_DIR"
+fi
+
+# Install settings.json (only if it doesn't exist - don't overwrite)
+if [[ -f "${CLAUDE_DIR}/settings.json" ]]; then
+    echo -e "${GREEN}Already exists${NC} ~/.claude/settings.json (not overwriting)"
+else
+    echo -e "${GREEN}Installing${NC} ~/.claude/settings.json"
+    cp "${BASE_DIR}/settings.json" "${CLAUDE_DIR}/settings.json"
+fi
+
+# Install CLAUDE.md (only if it doesn't exist - don't overwrite)
+if [[ -f "${CLAUDE_DIR}/CLAUDE.md" ]]; then
+    echo -e "${GREEN}Already exists${NC} ~/.claude/CLAUDE.md (not overwriting)"
+else
+    echo -e "${GREEN}Installing${NC} ~/.claude/CLAUDE.md"
+    cp "${BASE_DIR}/CLAUDE.md" "${CLAUDE_DIR}/CLAUDE.md"
+fi

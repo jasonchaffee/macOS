@@ -1,0 +1,18 @@
+#!/usr/bin/env zsh
+
+BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
+source ${BASE_DIR}/../lib/backup
+source ${BASE_DIR}/../lib/colors
+
+CURSOR_DIR="${HOME}/Library/Application Support/Cursor/User"
+
+# Backup and remove settings.json
+if [[ -f "${CURSOR_DIR}/settings.json" ]]; then
+    backup_file "${CURSOR_DIR}/settings.json"
+    echo -e "${YELLOW}Removing${NC} Cursor settings.json"
+    rm -f "${CURSOR_DIR}/settings.json"
+else
+    echo -e "${GREEN}Already removed${NC} Cursor settings.json"
+fi
+
+# Note: Not removing Cursor directory as it contains user workspaces and extensions

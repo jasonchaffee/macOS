@@ -1,0 +1,28 @@
+#!/usr/bin/env zsh
+
+BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
+source ${BASE_DIR}/../lib/backup
+source ${BASE_DIR}/../lib/colors
+
+CLAUDE_DIR="${HOME}/.claude"
+
+# Backup and remove settings.json
+if [[ -f "${CLAUDE_DIR}/settings.json" ]]; then
+    backup_file "${CLAUDE_DIR}/settings.json"
+    echo -e "${YELLOW}Removing${NC} ~/.claude/settings.json"
+    rm -f "${CLAUDE_DIR}/settings.json"
+else
+    echo -e "${GREEN}Already removed${NC} ~/.claude/settings.json"
+fi
+
+# Backup and remove CLAUDE.md
+if [[ -f "${CLAUDE_DIR}/CLAUDE.md" ]]; then
+    backup_file "${CLAUDE_DIR}/CLAUDE.md"
+    echo -e "${YELLOW}Removing${NC} ~/.claude/CLAUDE.md"
+    rm -f "${CLAUDE_DIR}/CLAUDE.md"
+else
+    echo -e "${GREEN}Already removed${NC} ~/.claude/CLAUDE.md"
+fi
+
+# Note: Not removing ~/.claude directory or settings.local.json
+# as they contain user-specific data and customizations

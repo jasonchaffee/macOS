@@ -21,15 +21,15 @@ load test_helper
 }
 
 @test "install script has all phases" {
-    # Count phases - should have 13 phases
+    # Count phases - should have 14 phases
     phase_count=$(grep -c "^# Phase [0-9]*:" "${PROJECT_DIR}/install")
-    [[ "$phase_count" -eq 13 ]]
+    [[ "$phase_count" -eq 14 ]]
 }
 
 @test "uninstall script has all phases" {
-    # Count phases - should have 13 phases
+    # Count phases - should have 14 phases
     phase_count=$(grep -c "^# Phase [0-9]*:" "${PROJECT_DIR}/uninstall")
-    [[ "$phase_count" -eq 13 ]]
+    [[ "$phase_count" -eq 14 ]]
 }
 
 @test "install script phases are in order" {
@@ -91,4 +91,70 @@ load test_helper
 
 @test "zshrc sources .zshrc.local for machine-specific config" {
     grep -q 'zshrc.local' "${PROJECT_DIR}/zsh/zshrc"
+}
+
+# AI tool config tests
+@test "claude install script exists and is executable" {
+    [[ -x "${PROJECT_DIR}/claude/install" ]]
+}
+
+@test "claude uninstall script exists and is executable" {
+    [[ -x "${PROJECT_DIR}/claude/uninstall" ]]
+}
+
+@test "claude has config files" {
+    [[ -f "${PROJECT_DIR}/claude/settings.json" ]]
+    [[ -f "${PROJECT_DIR}/claude/CLAUDE.md" ]]
+}
+
+@test "codex install script exists and is executable" {
+    [[ -x "${PROJECT_DIR}/codex/install" ]]
+}
+
+@test "codex uninstall script exists and is executable" {
+    [[ -x "${PROJECT_DIR}/codex/uninstall" ]]
+}
+
+@test "codex has config files" {
+    [[ -f "${PROJECT_DIR}/codex/config.toml" ]]
+}
+
+@test "cursor install script exists and is executable" {
+    [[ -x "${PROJECT_DIR}/cursor/install" ]]
+}
+
+@test "cursor uninstall script exists and is executable" {
+    [[ -x "${PROJECT_DIR}/cursor/uninstall" ]]
+}
+
+@test "cursor has config files" {
+    [[ -f "${PROJECT_DIR}/cursor/settings.json" ]]
+}
+
+@test "gemini install script exists and is executable" {
+    [[ -x "${PROJECT_DIR}/gemini/install" ]]
+}
+
+@test "gemini uninstall script exists and is executable" {
+    [[ -x "${PROJECT_DIR}/gemini/uninstall" ]]
+}
+
+@test "gemini has config files" {
+    [[ -f "${PROJECT_DIR}/gemini/settings.json" ]]
+    [[ -f "${PROJECT_DIR}/gemini/GEMINI.md" ]]
+}
+
+@test "AI tool install scripts don't overwrite existing configs" {
+    # All AI tool install scripts should check if file exists before copying
+    grep -q 'Already exists' "${PROJECT_DIR}/claude/install"
+    grep -q 'Already exists' "${PROJECT_DIR}/codex/install"
+    grep -q 'Already exists' "${PROJECT_DIR}/cursor/install"
+    grep -q 'Already exists' "${PROJECT_DIR}/gemini/install"
+}
+
+@test "AI tool uninstall scripts use backup_file" {
+    grep -q 'backup_file' "${PROJECT_DIR}/claude/uninstall"
+    grep -q 'backup_file' "${PROJECT_DIR}/codex/uninstall"
+    grep -q 'backup_file' "${PROJECT_DIR}/cursor/uninstall"
+    grep -q 'backup_file' "${PROJECT_DIR}/gemini/uninstall"
 }

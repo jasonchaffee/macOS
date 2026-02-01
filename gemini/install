@@ -1,0 +1,28 @@
+#!/usr/bin/env zsh
+
+BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
+source ${BASE_DIR}/../lib/colors
+
+GEMINI_DIR="${HOME}/.gemini"
+
+# Create ~/.gemini directory if it doesn't exist
+if [[ ! -d "$GEMINI_DIR" ]]; then
+    echo -e "${GREEN}Creating${NC} ~/.gemini directory"
+    mkdir -p "$GEMINI_DIR"
+fi
+
+# Install settings.json (only if it doesn't exist - don't overwrite)
+if [[ -f "${GEMINI_DIR}/settings.json" ]]; then
+    echo -e "${GREEN}Already exists${NC} ~/.gemini/settings.json (not overwriting)"
+else
+    echo -e "${GREEN}Installing${NC} ~/.gemini/settings.json"
+    cp "${BASE_DIR}/settings.json" "${GEMINI_DIR}/settings.json"
+fi
+
+# Install GEMINI.md (only if it doesn't exist - don't overwrite)
+if [[ -f "${GEMINI_DIR}/GEMINI.md" ]]; then
+    echo -e "${GREEN}Already exists${NC} ~/.gemini/GEMINI.md (not overwriting)"
+else
+    echo -e "${GREEN}Installing${NC} ~/.gemini/GEMINI.md"
+    cp "${BASE_DIR}/GEMINI.md" "${GEMINI_DIR}/GEMINI.md"
+fi

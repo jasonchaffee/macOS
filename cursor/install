@@ -1,0 +1,20 @@
+#!/usr/bin/env zsh
+
+BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
+source ${BASE_DIR}/../lib/colors
+
+CURSOR_DIR="${HOME}/Library/Application Support/Cursor/User"
+
+# Create Cursor User directory if it doesn't exist
+if [[ ! -d "$CURSOR_DIR" ]]; then
+    echo -e "${GREEN}Creating${NC} Cursor User directory"
+    mkdir -p "$CURSOR_DIR"
+fi
+
+# Install settings.json (only if it doesn't exist - don't overwrite)
+if [[ -f "${CURSOR_DIR}/settings.json" ]]; then
+    echo -e "${GREEN}Already exists${NC} Cursor settings.json (not overwriting)"
+else
+    echo -e "${GREEN}Installing${NC} Cursor settings.json"
+    cp "${BASE_DIR}/settings.json" "${CURSOR_DIR}/settings.json"
+fi

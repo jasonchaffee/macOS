@@ -1,0 +1,28 @@
+#!/usr/bin/env zsh
+
+BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
+source ${BASE_DIR}/../lib/backup
+source ${BASE_DIR}/../lib/colors
+
+GEMINI_DIR="${HOME}/.gemini"
+
+# Backup and remove settings.json
+if [[ -f "${GEMINI_DIR}/settings.json" ]]; then
+    backup_file "${GEMINI_DIR}/settings.json"
+    echo -e "${YELLOW}Removing${NC} ~/.gemini/settings.json"
+    rm -f "${GEMINI_DIR}/settings.json"
+else
+    echo -e "${GREEN}Already removed${NC} ~/.gemini/settings.json"
+fi
+
+# Backup and remove GEMINI.md
+if [[ -f "${GEMINI_DIR}/GEMINI.md" ]]; then
+    backup_file "${GEMINI_DIR}/GEMINI.md"
+    echo -e "${YELLOW}Removing${NC} ~/.gemini/GEMINI.md"
+    rm -f "${GEMINI_DIR}/GEMINI.md"
+else
+    echo -e "${GREEN}Already removed${NC} ~/.gemini/GEMINI.md"
+fi
+
+# Note: Not removing ~/.gemini directory or oauth_creds.json
+# as they contain user-specific auth and session data

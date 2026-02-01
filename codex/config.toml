@@ -1,0 +1,5 @@
+# Codex CLI default configuration
+# Machine-specific settings (tokens, MCP servers) go in local overrides
+
+model = "gpt-5.1-codex-max"
+model_reasoning_effort = "medium"

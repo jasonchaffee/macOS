@@ -8,58 +8,69 @@ manual_log=/tmp/uninstall_manual_$$
 echo -e "${BOLD}${YELLOW}Starting macOS uninstall...${NC}"
 echo ""
 
-# Phase 1: Custom configs
-echo -e "${YELLOW}Phase 1:${NC} Custom configs"
+# Phase 1: AI tool configs (skipped by default - these are personal configs)
+if [[ "${UNINSTALL_AI_CONFIGS:-false}" == "true" ]]; then
+    echo -e "${YELLOW}Phase 1:${NC} AI tool configs"
+    ${BASE_DIR}/gemini/uninstall
+    ${BASE_DIR}/cursor/uninstall
+    ${BASE_DIR}/codex/uninstall
+    ${BASE_DIR}/claude/uninstall
+else
+    echo -e "${YELLOW}Phase 1:${NC} AI tool configs ${CYAN}(skipped - set UNINSTALL_AI_CONFIGS=true to include)${NC}"
+fi
+
+# Phase 2: Custom configs
+echo -e "\n${YELLOW}Phase 2:${NC} Custom configs"
 ${BASE_DIR}/vim/uninstall
 ${BASE_DIR}/git/uninstall
 
-# Phase 2: VS Code extensions
-echo -e "\n${YELLOW}Phase 2:${NC} VS Code extensions"
+# Phase 3: VS Code extensions
+echo -e "\n${YELLOW}Phase 3:${NC} VS Code extensions"
 ${BASE_DIR}/lib/uninstall-tools vscode $failure_log $manual_log
 
-# Phase 3: Cursor extensions
-echo -e "\n${YELLOW}Phase 3:${NC} Cursor extensions"
+# Phase 4: Cursor extensions
+echo -e "\n${YELLOW}Phase 4:${NC} Cursor extensions"
 ${BASE_DIR}/lib/uninstall-tools cursor $failure_log $manual_log
 
-# Phase 4: Mac App Store apps
-echo -e "\n${YELLOW}Phase 4:${NC} Mac App Store apps"
+# Phase 5: Mac App Store apps
+echo -e "\n${YELLOW}Phase 5:${NC} Mac App Store apps"
 ${BASE_DIR}/lib/uninstall-tools mas $failure_log $manual_log
 
-# Phase 5: Python tools (via uv)
-echo -e "\n${YELLOW}Phase 5:${NC} Python tools"
+# Phase 6: Python tools (via uv)
+echo -e "\n${YELLOW}Phase 6:${NC} Python tools"
 ${BASE_DIR}/lib/uninstall-tools uv $failure_log $manual_log
 
-# Phase 6: Google Cloud components (before removing gcloud-cli cask)
-echo -e "\n${YELLOW}Phase 6:${NC} Google Cloud components"
+# Phase 7: Google Cloud components (before removing gcloud-cli cask)
+echo -e "\n${YELLOW}Phase 7:${NC} Google Cloud components"
 ${BASE_DIR}/lib/uninstall-tools gcloud $failure_log $manual_log
 
-# Phase 7: NPM packages (before removing node)
-echo -e "\n${YELLOW}Phase 7:${NC} NPM packages"
+# Phase 8: NPM packages (before removing node)
+echo -e "\n${YELLOW}Phase 8:${NC} NPM packages"
 ${BASE_DIR}/lib/uninstall-tools npm $failure_log $manual_log
 
-# Phase 8: Brew casks
-echo -e "\n${YELLOW}Phase 8:${NC} Brew casks"
+# Phase 9: Brew casks
+echo -e "\n${YELLOW}Phase 9:${NC} Brew casks"
 ${BASE_DIR}/lib/uninstall-tools brew-cask $failure_log $manual_log
 
-# Phase 9: Mise-managed tools
-echo -e "\n${YELLOW}Phase 9:${NC} Mise-managed tools"
+# Phase 10: Mise-managed tools
+echo -e "\n${YELLOW}Phase 10:${NC} Mise-managed tools"
 ${BASE_DIR}/lib/uninstall-tools mise $failure_log $manual_log
 
-# Phase 10: Mise version manager
-echo -e "\n${YELLOW}Phase 10:${NC} Mise version manager"
+# Phase 11: Mise version manager
+echo -e "\n${YELLOW}Phase 11:${NC} Mise version manager"
 ${BASE_DIR}/mise/uninstall
 
-# Phase 11: Shell configs
-echo -e "\n${YELLOW}Phase 11:${NC} Shell configs"
+# Phase 12: Shell configs
+echo -e "\n${YELLOW}Phase 12:${NC} Shell configs"
 ${BASE_DIR}/bash/uninstall
 ${BASE_DIR}/zsh/uninstall
 
-# Phase 12: Brew packages (reverse order)
-echo -e "\n${YELLOW}Phase 12:${NC} Brew packages"
+# Phase 13: Brew packages (reverse order)
+echo -e "\n${YELLOW}Phase 13:${NC} Brew packages"
 ${BASE_DIR}/lib/uninstall-tools brew --reverse $failure_log $manual_log
 
-# Phase 13: Homebrew
-echo -e "\n${YELLOW}Phase 13:${NC} Homebrew"
+# Phase 14: Homebrew
+echo -e "\n${YELLOW}Phase 14:${NC} Homebrew"
 ${BASE_DIR}/brew/uninstall
 
 # Final summary

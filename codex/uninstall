@@ -1,0 +1,19 @@
+#!/usr/bin/env zsh
+
+BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
+source ${BASE_DIR}/../lib/backup
+source ${BASE_DIR}/../lib/colors
+
+CODEX_DIR="${HOME}/.codex"
+
+# Backup and remove config.toml
+if [[ -f "${CODEX_DIR}/config.toml" ]]; then
+    backup_file "${CODEX_DIR}/config.toml"
+    echo -e "${YELLOW}Removing${NC} ~/.codex/config.toml"
+    rm -f "${CODEX_DIR}/config.toml"
+else
+    echo -e "${GREEN}Already removed${NC} ~/.codex/config.toml"
+fi
+
+# Note: Not removing ~/.codex directory or auth.json
+# as they contain user-specific tokens and session data

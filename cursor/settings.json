@@ -1,0 +1,20 @@
+{
+    "editor.tokenColorCustomizations": {
+        "comments": "#A6E3A1"
+    },
+    "git.enableSmartCommit": true,
+    "java.configuration.detectJdksAtStart": false,
+    "java.format.settings.profile": "GoogleStyle",
+    "format.settings.google.version": "latest",
+    "workbench.settings.applyToAllProfiles": [
+        "java.configuration.runtimes",
+        "java.configuration.detectJdksAtStart"
+    ],
+    "redhat.telemetry.enabled": false,
+    "telemetry.telemetryLevel": "off",
+    "workbench.activityBar.location": "default",
+    "workbench.activityBar.orientation": "vertical",
+    "workbench.colorTheme": "Material Night Eighties",
+    "workbench.sideBar.location": "left",
+    "claudeCode.preferredLocation": "panel"
+}
