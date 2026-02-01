@@ -2,10 +2,33 @@
 
 # Usage: install-tools <type>
 # Installs all tools of the given type from tools.conf
+# Tracks and reports failures at the end
 
 BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
 type=$1
+failure_file=/tmp/install_failures_$$
 
-while read entry; do
+grep "^${type}:" ${BASE_DIR}/../tools.conf | while read entry; do
+    [[ -z "$entry" ]] && continue
     ${BASE_DIR}/install-tool "$entry" </dev/null
-done < <(grep "^${type}:" ${BASE_DIR}/../tools.conf)
+    if [[ $? -ne 0 ]]; then
+        clean=${entry%%#*}
+        clean=${clean%% *}
+        pkg=${clean#*:}
+        echo "$pkg" >> $failure_file
+    fi
+done
+
+# Report results
+if [[ -f $failure_file ]]; then
+    echo ""
+    echo "=== ${type} install failures ==="
+    while read pkg; do
+        echo "  - $pkg"
+    done < $failure_file
+    count=$(wc -l < $failure_file)
+    rm $failure_file
+    exit $count
+fi
+
+exit 0

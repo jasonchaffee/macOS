@@ -2,17 +2,42 @@
 
 # Usage: uninstall-tools <type> [--reverse]
 # Uninstalls all tools of the given type from tools.conf
+# Tracks and reports failures at the end
 
 BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
 type=$1
 reverse=$2
 
+typeset -a failures
+
+# Get tool entries, optionally reversed
 if [[ "$reverse" == "--reverse" ]]; then
-    while read entry; do
-        ${BASE_DIR}/uninstall-tool "$entry" </dev/null
-    done < <(grep "^${type}:" ${BASE_DIR}/../tools.conf | tail -r)
+    entries=$(grep "^${type}:" ${BASE_DIR}/../tools.conf | tail -r)
 else
-    while read entry; do
-        ${BASE_DIR}/uninstall-tool "$entry" </dev/null
-    done < <(grep "^${type}:" ${BASE_DIR}/../tools.conf)
+    entries=$(grep "^${type}:" ${BASE_DIR}/../tools.conf)
 fi
+
+echo "$entries" | while read entry; do
+    [[ -z "$entry" ]] && continue
+    ${BASE_DIR}/uninstall-tool "$entry" </dev/null
+    if [[ $? -ne 0 ]]; then
+        clean=${entry%%#*}
+        clean=${clean%% *}
+        pkg=${clean#*:}
+        echo "$pkg" >> /tmp/uninstall_failures_$$
+    fi
+done
+
+# Report results
+if [[ -f /tmp/uninstall_failures_$$ ]]; then
+    echo ""
+    echo "=== ${type} uninstall failures ==="
+    cat /tmp/uninstall_failures_$$  | while read pkg; do
+        echo "  - $pkg"
+    done
+    count=$(wc -l < /tmp/uninstall_failures_$$)
+    rm /tmp/uninstall_failures_$$
+    exit $count
+fi
+
+exit 0

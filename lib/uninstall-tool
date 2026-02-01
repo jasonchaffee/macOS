@@ -2,6 +2,7 @@
 
 # Usage: uninstall-tool <type>:<package>[@version]
 # Types: brew, brew-cask, mise, npm
+# Returns: 0 on success, 1 on failure
 
 entry=$1
 # Strip comments and whitespace
@@ -18,12 +19,14 @@ case $type in
         if command -v brew >/dev/null 2>&1; then
             echo "Uninstalling brew package: $package"
             brew uninstall $package
+            exit $?
         fi
         ;;
     brew-cask)
         if command -v brew >/dev/null 2>&1; then
             echo "Uninstalling brew cask: $package"
             brew uninstall --cask $package
+            exit $?
         fi
         ;;
     mise)
@@ -31,15 +34,18 @@ case $type in
             echo "Uninstalling mise tool: $package"
             mise unuse -g $package
             mise uninstall --all --yes $package
+            exit $?
         fi
         ;;
     npm)
         if command -v npm >/dev/null 2>&1; then
             echo "Uninstalling npm package: $package"
             npm uninstall -g $package
+            exit $?
         fi
         ;;
     *)
         echo "Unknown type: $type (entry: $1)"
+        exit 1
         ;;
 esac

@@ -1,6 +1,7 @@
 #!/usr/bin/env zsh
 
 BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
+total_failures=0
 
 # Phase 1: Bootstrap Homebrew
 ${BASE_DIR}/brew/install
@@ -14,6 +15,7 @@ fi
 
 # Phase 2: Brew packages
 ${BASE_DIR}/lib/install-tools brew
+((total_failures += $?))
 
 # Phase 3: Shell configs
 ${BASE_DIR}/bash/install
@@ -27,13 +29,26 @@ fi
 
 # Phase 5: Mise-managed tools
 ${BASE_DIR}/lib/install-tools mise
+((total_failures += $?))
 
 # Phase 6: NPM packages
 ${BASE_DIR}/lib/install-tools npm
+((total_failures += $?))
 
 # Phase 7: Brew casks
 ${BASE_DIR}/lib/install-tools brew-cask
+((total_failures += $?))
 
 # Phase 8: Custom configs
 ${BASE_DIR}/git/install
 ${BASE_DIR}/vim/install
+
+# Final summary
+echo ""
+echo "========================================"
+if [[ $total_failures -eq 0 ]]; then
+    echo "Install complete - all tools installed successfully"
+else
+    echo "Install complete - $total_failures tool(s) failed"
+fi
+echo "========================================"

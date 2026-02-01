@@ -1,6 +1,7 @@
 #!/usr/bin/env zsh
 
 BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
+total_failures=0
 
 # Phase 1: Custom configs
 ${BASE_DIR}/vim/uninstall
@@ -8,12 +9,15 @@ ${BASE_DIR}/git/uninstall
 
 # Phase 2: NPM packages (before removing node)
 ${BASE_DIR}/lib/uninstall-tools npm
+((total_failures += $?))
 
 # Phase 3: Brew casks
 ${BASE_DIR}/lib/uninstall-tools brew-cask
+((total_failures += $?))
 
 # Phase 4: Mise-managed tools
 ${BASE_DIR}/lib/uninstall-tools mise
+((total_failures += $?))
 
 # Phase 5: Mise version manager
 ${BASE_DIR}/mise/uninstall
@@ -24,6 +28,17 @@ ${BASE_DIR}/zsh/uninstall
 
 # Phase 7: Brew packages (reverse order)
 ${BASE_DIR}/lib/uninstall-tools brew --reverse
+((total_failures += $?))
 
 # Phase 8: Homebrew
 ${BASE_DIR}/brew/uninstall
+
+# Final summary
+echo ""
+echo "========================================"
+if [[ $total_failures -eq 0 ]]; then
+    echo "Uninstall complete - all tools removed successfully"
+else
+    echo "Uninstall complete - $total_failures tool(s) failed"
+fi
+echo "========================================"
