@@ -63,40 +63,50 @@ echo -e "\n${YELLOW}Phase 13:${NC} Homebrew"
 ${BASE_DIR}/brew/uninstall
 
 # Final summary
-echo ""
-echo -e "${YELLOW}========================================${NC}"
-echo -e "${YELLOW}Uninstall Complete${NC}"
-echo -e "${YELLOW}========================================${NC}"
-echo ""
-
 has_failures=false
 has_manual=false
 [[ -f $failure_log ]] && has_failures=true
 [[ -f $manual_log ]] && has_manual=true
 
+# Choose border color based on success/failure
+if [[ "$has_failures" == "true" ]]; then
+    border_color="${RED}"
+else
+    border_color="${GREEN}"
+fi
+
+echo ""
+echo -e "${border_color}========================================${NC}"
+echo -e "${border_color}Uninstall Complete${NC}"
+echo -e "${border_color}========================================${NC}"
+
 if [[ "$has_failures" == "true" || "$has_manual" == "true" ]]; then
-    echo -e "${BOLD}Summary${NC}"
     echo ""
+    echo -e "${YELLOW}========================================${NC}"
+    echo -e "${YELLOW}Summary${NC}"
+    echo -e "${YELLOW}========================================${NC}"
 
     if [[ "$has_failures" == "true" ]]; then
+        echo ""
         echo -e "${RED}Failed:${NC}"
         cat $failure_log
         rm $failure_log
-        echo ""
     fi
 
     if [[ "$has_manual" == "true" ]]; then
+        echo ""
         echo -e "${YELLOW}Manual Installs (require manual removal):${NC}"
         cat $manual_log
         rm $manual_log
-        echo ""
     fi
 
+    echo ""
     if [[ "$has_failures" == "true" ]]; then
         echo -e "${RED}✗ Some tools failed to uninstall${NC}"
     else
         echo -e "${GREEN}✓ All managed tools removed successfully${NC}"
     fi
 else
+    echo ""
     echo -e "${GREEN}✓ All tools removed successfully${NC}"
 fi

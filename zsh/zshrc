@@ -63,3 +63,16 @@ if command -v brew >/dev/null 2>&1; then
         antidote load
     fi
 fi
+
+# -------------------------------------------------------------------
+# Machine-Specific Configuration
+# -------------------------------------------------------------------
+# Source ~/.zshrc.local for machine-specific settings like:
+#   - SSL certificates (REQUESTS_CA_BUNDLE, NODE_EXTRA_CA_CERTS, etc.)
+#   - API keys and tokens
+#   - Work-specific environment variables
+#   - Tool-specific paths (Rancher Desktop, etc.)
+# This file is not tracked in git to keep secrets out of the repo.
+if [[ -f ${HOME}/.zshrc.local ]]; then
+    . ${HOME}/.zshrc.local
+fi
