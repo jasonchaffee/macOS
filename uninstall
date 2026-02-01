@@ -7,19 +7,19 @@ ${BASE_DIR}/vim/uninstall
 ${BASE_DIR}/git/uninstall
 
 # Uninstall npm packages (before removing node)
-grep '^npm:' ${BASE_DIR}/tools.conf | while read entry; do
-    ${BASE_DIR}/lib/uninstall-tool "$entry"
-done
+while read entry; do
+    ${BASE_DIR}/lib/uninstall-tool "$entry" </dev/null
+done < <(grep '^npm:' ${BASE_DIR}/tools.conf)
 
 # Uninstall brew casks
-grep '^brew-cask:' ${BASE_DIR}/tools.conf | while read entry; do
-    ${BASE_DIR}/lib/uninstall-tool "$entry"
-done
+while read entry; do
+    ${BASE_DIR}/lib/uninstall-tool "$entry" </dev/null
+done < <(grep '^brew-cask:' ${BASE_DIR}/tools.conf)
 
 # Uninstall mise-managed tools
-grep '^mise:' ${BASE_DIR}/tools.conf | while read entry; do
-    ${BASE_DIR}/lib/uninstall-tool "$entry"
-done
+while read entry; do
+    ${BASE_DIR}/lib/uninstall-tool "$entry" </dev/null
+done < <(grep '^mise:' ${BASE_DIR}/tools.conf)
 
 # Uninstall mise
 ${BASE_DIR}/mise/uninstall
@@ -29,9 +29,9 @@ ${BASE_DIR}/bash/uninstall
 ${BASE_DIR}/zsh/uninstall
 
 # Uninstall brew packages (antidote before brew)
-grep '^brew:' ${BASE_DIR}/tools.conf | tac | while read entry; do
-    ${BASE_DIR}/lib/uninstall-tool "$entry"
-done
+while read entry; do
+    ${BASE_DIR}/lib/uninstall-tool "$entry" </dev/null
+done < <(grep '^brew:' ${BASE_DIR}/tools.conf | tail -r)
 
 # Bootstrap cleanup: brew last
 ${BASE_DIR}/brew/uninstall
