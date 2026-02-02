@@ -1,0 +1,5 @@
+# Claude Code local settings (contains permission history with potential secrets)
+.claude/settings.local.json
+
+# Editor history
+.history/

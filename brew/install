@@ -1,8 +1,23 @@
 #!/usr/bin/env zsh
 
+BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
+source ${BASE_DIR}/../lib/colors
+
 # Install Homebrew if not present
 if ! command -v brew >/dev/null 2>&1; then
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    echo -e "${GREEN}Installing${NC} Homebrew"
+
+    # Try normal download first, fall back to insecure if SSL fails (corporate networks)
+    if curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh -o /tmp/brew_install.sh 2>/dev/null; then
+        /bin/bash /tmp/brew_install.sh
+    else
+        echo -e "${YELLOW}Warning:${NC} SSL verification failed, using insecure download (corporate network?)"
+        curl -fsSLk https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh -o /tmp/brew_install.sh
+        /bin/bash /tmp/brew_install.sh
+    fi
+    rm -f /tmp/brew_install.sh
+else
+    echo -e "${GREEN}Already installed${NC} Homebrew"
 fi
 
 # Setup brew in PATH for this session (needed on Apple Silicon)
