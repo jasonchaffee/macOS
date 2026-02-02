@@ -24,6 +24,11 @@ fi
 echo -e "\n${BLUE}Phase 2:${NC} Brew packages"
 ${BASE_DIR}/lib/install-tools brew $failure_log $manual_log $caveat_log
 
+# Add brew curl to PATH (keg-only, needed for SSL on corporate networks)
+if [[ -d /opt/homebrew/opt/curl/bin ]]; then
+    export PATH="/opt/homebrew/opt/curl/bin:$PATH"
+fi
+
 # Phase 3: Shell configs
 echo -e "\n${BLUE}Phase 3:${NC} Shell configs"
 ${BASE_DIR}/bash/install

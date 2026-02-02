@@ -89,6 +89,15 @@ load test_helper
     grep -q 'Caveats' "${PROJECT_DIR}/install"
 }
 
+@test "install script adds brew curl to PATH for SSL support" {
+    grep -q '/opt/homebrew/opt/curl/bin' "${PROJECT_DIR}/install"
+}
+
+@test "curl is first in brew packages for SSL support" {
+    first_brew=$(grep '^brew:' "${PROJECT_DIR}/tools.conf" | head -1)
+    [[ "$first_brew" == *"curl"* ]]
+}
+
 @test "zshrc sources .zshrc.local for machine-specific config" {
     grep -q 'zshrc.local' "${PROJECT_DIR}/zsh/zshrc"
 }
