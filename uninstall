@@ -15,6 +15,7 @@ if [[ "${UNINSTALL_AI_CONFIGS:-false}" == "true" ]]; then
     ${BASE_DIR}/cursor/uninstall
     ${BASE_DIR}/codex/uninstall
     ${BASE_DIR}/claude/uninstall
+    ${BASE_DIR}/antigravity/uninstall
 else
     echo -e "${YELLOW}Phase 1:${NC} AI tool configs ${CYAN}(skipped - set UNINSTALL_AI_CONFIGS=true to include)${NC}"
 fi

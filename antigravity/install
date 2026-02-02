@@ -1,0 +1,20 @@
+#!/usr/bin/env zsh
+
+BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
+source ${BASE_DIR}/../lib/colors
+
+ANTIGRAVITY_DIR="${HOME}/Library/Application Support/Antigravity/User"
+
+# Create Antigravity User directory if it doesn't exist
+if [[ ! -d "$ANTIGRAVITY_DIR" ]]; then
+    echo -e "${GREEN}Creating${NC} Antigravity User directory"
+    mkdir -p "$ANTIGRAVITY_DIR"
+fi
+
+# Install settings.json (only if it doesn't exist - don't overwrite)
+if [[ -f "${ANTIGRAVITY_DIR}/settings.json" ]]; then
+    echo -e "${GREEN}Already exists${NC} Antigravity settings.json (not overwriting)"
+else
+    echo -e "${GREEN}Installing${NC} Antigravity settings.json"
+    cp "${BASE_DIR}/settings.json" "${ANTIGRAVITY_DIR}/settings.json"
+fi

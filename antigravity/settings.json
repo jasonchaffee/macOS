@@ -1,0 +1,8 @@
+{
+    "editor.tokenColorCustomizations": {
+        "comments": "#A6E3A1"
+    },
+    "git.enableSmartCommit": true,
+    "telemetry.telemetryLevel": "off",
+    "workbench.colorTheme": "Material Night Eighties"
+}

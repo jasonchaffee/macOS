@@ -94,6 +94,18 @@ load test_helper
 }
 
 # AI tool config tests
+@test "antigravity install script exists and is executable" {
+    [[ -x "${PROJECT_DIR}/antigravity/install" ]]
+}
+
+@test "antigravity uninstall script exists and is executable" {
+    [[ -x "${PROJECT_DIR}/antigravity/uninstall" ]]
+}
+
+@test "antigravity has config files" {
+    [[ -f "${PROJECT_DIR}/antigravity/settings.json" ]]
+}
+
 @test "claude install script exists and is executable" {
     [[ -x "${PROJECT_DIR}/claude/install" ]]
 }
@@ -146,6 +158,7 @@ load test_helper
 
 @test "AI tool install scripts don't overwrite existing configs" {
     # All AI tool install scripts should check if file exists before copying
+    grep -q 'Already exists' "${PROJECT_DIR}/antigravity/install"
     grep -q 'Already exists' "${PROJECT_DIR}/claude/install"
     grep -q 'Already exists' "${PROJECT_DIR}/codex/install"
     grep -q 'Already exists' "${PROJECT_DIR}/cursor/install"
@@ -153,6 +166,7 @@ load test_helper
 }
 
 @test "AI tool uninstall scripts use backup_file" {
+    grep -q 'backup_file' "${PROJECT_DIR}/antigravity/uninstall"
     grep -q 'backup_file' "${PROJECT_DIR}/claude/uninstall"
     grep -q 'backup_file' "${PROJECT_DIR}/codex/uninstall"
     grep -q 'backup_file' "${PROJECT_DIR}/cursor/uninstall"

@@ -1,0 +1,18 @@
+#!/usr/bin/env zsh
+
+BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
+source ${BASE_DIR}/../lib/backup
+source ${BASE_DIR}/../lib/colors
+
+ANTIGRAVITY_DIR="${HOME}/Library/Application Support/Antigravity/User"
+
+# Backup and remove settings.json
+if [[ -f "${ANTIGRAVITY_DIR}/settings.json" ]]; then
+    backup_file "${ANTIGRAVITY_DIR}/settings.json"
+    echo -e "${YELLOW}Removing${NC} Antigravity settings.json"
+    rm -f "${ANTIGRAVITY_DIR}/settings.json"
+else
+    echo -e "${GREEN}Already removed${NC} Antigravity settings.json"
+fi
+
+# Note: Not removing Antigravity directory as it contains user workspaces and extensions

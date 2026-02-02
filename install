@@ -75,6 +75,7 @@ ${BASE_DIR}/vim/install
 
 # Phase 14: AI tool configs
 echo -e "\n${BLUE}Phase 14:${NC} AI tool configs"
+${BASE_DIR}/antigravity/install
 ${BASE_DIR}/claude/install
 ${BASE_DIR}/codex/install
 ${BASE_DIR}/cursor/install
