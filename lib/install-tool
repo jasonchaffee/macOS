@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 # Usage: install-tool <type>:<package>[@version]
-# Types: brew, brew-cask, mise, npm, mas, vscode, cursor, uv, gcloud
+# Types: brew, brew-cask, mise, npm, mas, vscode, cursor, uv, gcloud, go
 # Returns: 0 on success, 1 on failure, 2 on manual install detected
 
 BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
@@ -119,6 +119,20 @@ case $type in
         if command -v gcloud >/dev/null 2>&1; then
             echo -e "${CYAN}Installing gcloud component:${NC} ${BOLD}$package${NC}"
             gcloud components install $package --quiet
+            exit $?
+        fi
+        ;;
+    go)
+        if command -v go >/dev/null 2>&1; then
+            # Extract binary name from package path (last component)
+            binary_name=${package##*/}
+            # Check if already installed
+            if command -v $binary_name >/dev/null 2>&1; then
+                echo -e "${GREEN}Already installed:${NC} ${BOLD}$binary_name${NC}"
+                exit 0
+            fi
+            echo -e "${CYAN}Installing Go tool:${NC} ${BOLD}${package}@${version}${NC}"
+            go install ${package}@${version}
             exit $?
         fi
         ;;

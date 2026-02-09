@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 # Usage: uninstall-tool <type>:<package>[@version]
-# Types: brew, brew-cask, mise, npm, mas, vscode, cursor, uv, gcloud
+# Types: brew, brew-cask, mise, npm, mas, vscode, cursor, uv, gcloud, go
 # Returns: 0 on success/not installed, 1 on failure, 2 on manual install detected
 
 BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
@@ -115,6 +115,23 @@ case $type in
         if command -v gcloud >/dev/null 2>&1; then
             echo -e "${YELLOW}Uninstalling gcloud component:${NC} ${BOLD}$package${NC}"
             gcloud components remove $package --quiet
+            exit $?
+        fi
+        ;;
+    go)
+        if command -v go >/dev/null 2>&1; then
+            # Extract binary name from package path (last component)
+            binary_name=${package##*/}
+            gobin=$(go env GOBIN)
+            [[ -z "$gobin" ]] && gobin="$(go env GOPATH)/bin"
+            binary_path="$gobin/$binary_name"
+            # Check if installed
+            if [[ ! -f "$binary_path" ]]; then
+                echo -e "${GREEN}Not installed:${NC} ${BOLD}$binary_name${NC}"
+                exit 0
+            fi
+            echo -e "${YELLOW}Uninstalling Go tool:${NC} ${BOLD}$binary_name${NC}"
+            rm -f "$binary_path"
             exit $?
         fi
         ;;

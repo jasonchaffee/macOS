@@ -45,41 +45,45 @@ fi
 echo -e "\n${BLUE}Phase 5:${NC} Mise-managed tools"
 ${BASE_DIR}/lib/install-tools mise $failure_log $manual_log
 
-# Phase 6: NPM packages
-echo -e "\n${BLUE}Phase 6:${NC} NPM packages"
+# Phase 6: Go tools (requires Go from mise)
+echo -e "\n${BLUE}Phase 6:${NC} Go tools"
+${BASE_DIR}/lib/install-tools go $failure_log $manual_log
+
+# Phase 7: NPM packages
+echo -e "\n${BLUE}Phase 7:${NC} NPM packages"
 ${BASE_DIR}/lib/install-tools npm $failure_log $manual_log
 
-# Phase 7: Brew casks
-echo -e "\n${BLUE}Phase 7:${NC} Brew casks"
+# Phase 8: Brew casks
+echo -e "\n${BLUE}Phase 8:${NC} Brew casks"
 ${BASE_DIR}/lib/install-tools brew-cask $failure_log $manual_log
 
-# Phase 8: Google Cloud components
-echo -e "\n${BLUE}Phase 8:${NC} Google Cloud components"
+# Phase 9: Google Cloud components
+echo -e "\n${BLUE}Phase 9:${NC} Google Cloud components"
 ${BASE_DIR}/lib/install-tools gcloud $failure_log $manual_log
 
-# Phase 9: Python tools (via uv)
-echo -e "\n${BLUE}Phase 9:${NC} Python tools"
+# Phase 10: Python tools (via uv)
+echo -e "\n${BLUE}Phase 10:${NC} Python tools"
 ${BASE_DIR}/lib/install-tools uv $failure_log $manual_log
 
-# Phase 10: Mac App Store apps
-echo -e "\n${BLUE}Phase 10:${NC} Mac App Store apps"
+# Phase 11: Mac App Store apps
+echo -e "\n${BLUE}Phase 11:${NC} Mac App Store apps"
 ${BASE_DIR}/lib/install-tools mas $failure_log $manual_log
 
-# Phase 11: Cursor extensions
-echo -e "\n${BLUE}Phase 11:${NC} Cursor extensions"
+# Phase 12: Cursor extensions
+echo -e "\n${BLUE}Phase 12:${NC} Cursor extensions"
 ${BASE_DIR}/lib/install-tools cursor $failure_log $manual_log
 
-# Phase 12: VS Code extensions
-echo -e "\n${BLUE}Phase 12:${NC} VS Code extensions"
+# Phase 13: VS Code extensions
+echo -e "\n${BLUE}Phase 13:${NC} VS Code extensions"
 ${BASE_DIR}/lib/install-tools vscode $failure_log $manual_log
 
-# Phase 13: Custom configs
-echo -e "\n${BLUE}Phase 13:${NC} Custom configs"
+# Phase 14: Custom configs
+echo -e "\n${BLUE}Phase 14:${NC} Custom configs"
 ${BASE_DIR}/git/install
 ${BASE_DIR}/vim/install
 
-# Phase 14: AI tool configs
-echo -e "\n${BLUE}Phase 14:${NC} AI tool configs"
+# Phase 15: AI tool configs
+echo -e "\n${BLUE}Phase 15:${NC} AI tool configs"
 ${BASE_DIR}/antigravity/install
 ${BASE_DIR}/claude/install
 ${BASE_DIR}/codex/install

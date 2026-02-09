@@ -49,29 +49,33 @@ ${BASE_DIR}/lib/uninstall-tools gcloud $failure_log $manual_log
 echo -e "\n${YELLOW}Phase 8:${NC} NPM packages"
 ${BASE_DIR}/lib/uninstall-tools npm $failure_log $manual_log
 
-# Phase 9: Brew casks
-echo -e "\n${YELLOW}Phase 9:${NC} Brew casks"
+# Phase 9: Go tools (before removing Go via mise)
+echo -e "\n${YELLOW}Phase 9:${NC} Go tools"
+${BASE_DIR}/lib/uninstall-tools go $failure_log $manual_log
+
+# Phase 10: Brew casks
+echo -e "\n${YELLOW}Phase 10:${NC} Brew casks"
 ${BASE_DIR}/lib/uninstall-tools brew-cask $failure_log $manual_log
 
-# Phase 10: Mise-managed tools
-echo -e "\n${YELLOW}Phase 10:${NC} Mise-managed tools"
+# Phase 11: Mise-managed tools
+echo -e "\n${YELLOW}Phase 11:${NC} Mise-managed tools"
 ${BASE_DIR}/lib/uninstall-tools mise $failure_log $manual_log
 
-# Phase 11: Mise version manager
-echo -e "\n${YELLOW}Phase 11:${NC} Mise version manager"
+# Phase 12: Mise version manager
+echo -e "\n${YELLOW}Phase 12:${NC} Mise version manager"
 ${BASE_DIR}/mise/uninstall
 
-# Phase 12: Shell configs
-echo -e "\n${YELLOW}Phase 12:${NC} Shell configs"
+# Phase 13: Shell configs
+echo -e "\n${YELLOW}Phase 13:${NC} Shell configs"
 ${BASE_DIR}/bash/uninstall
 ${BASE_DIR}/zsh/uninstall
 
-# Phase 13: Brew packages (reverse order)
-echo -e "\n${YELLOW}Phase 13:${NC} Brew packages"
+# Phase 14: Brew packages (reverse order)
+echo -e "\n${YELLOW}Phase 14:${NC} Brew packages"
 ${BASE_DIR}/lib/uninstall-tools brew --reverse $failure_log $manual_log
 
-# Phase 14: Homebrew
-echo -e "\n${YELLOW}Phase 14:${NC} Homebrew"
+# Phase 15: Homebrew
+echo -e "\n${YELLOW}Phase 15:${NC} Homebrew"
 ${BASE_DIR}/brew/uninstall
 
 # Final summary

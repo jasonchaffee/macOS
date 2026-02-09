@@ -24,6 +24,7 @@ Simple tools are defined in `tools.conf` with format `<type>:<package>[@version]
 - `brew:` - Homebrew packages
 - `brew-cask:` - Homebrew casks (GUI apps)
 - `mise:` - Mise-managed runtimes/tools (supports `@version`)
+- `go:` - Go tools (via go install, requires mise:go)
 - `npm:` - NPM global packages
 - `mas:` - Mac App Store apps (use numeric app ID)
 - `vscode:` - VS Code extensions
@@ -57,15 +58,16 @@ The main `install` script enforces dependency order:
 2. **brew packages** - Including curl early for SSL
 3. **bash/zsh** - Shell configs
 4. **mise** - Runtime version manager
-5. **mise tools** - node, python, java, terraform, etc.
-6. **npm packages** - Requires node from previous phase
-7. **brew casks** - GUI applications (includes gcloud-cli)
-8. **gcloud components** - Google Cloud SDK components
-9. **uv tools** - Python CLI tools
-10. **mas** - Mac App Store apps
-11. **cursor extensions** - Cursor editor extensions
-12. **vscode extensions** - VS Code extensions
-13. **custom configs** - git, vim
+5. **mise tools** - node, python, java, go, terraform, etc.
+6. **go tools** - Go tools via go install (requires go from previous phase)
+7. **npm packages** - Requires node from phase 5
+8. **brew casks** - GUI applications (includes gcloud-cli)
+9. **gcloud components** - Google Cloud SDK components
+10. **uv tools** - Python CLI tools
+11. **mas** - Mac App Store apps
+12. **cursor extensions** - Cursor editor extensions
+13. **vscode extensions** - VS Code extensions
+14. **custom configs** - git, vim
 
 ### Testing
 

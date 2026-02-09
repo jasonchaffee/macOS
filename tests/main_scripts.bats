@@ -21,15 +21,15 @@ load test_helper
 }
 
 @test "install script has all phases" {
-    # Count phases - should have 14 phases
+    # Count phases - should have 15 phases
     phase_count=$(grep -c "^# Phase [0-9]*:" "${PROJECT_DIR}/install")
-    [[ "$phase_count" -eq 14 ]]
+    [[ "$phase_count" -eq 15 ]]
 }
 
 @test "uninstall script has all phases" {
-    # Count phases - should have 14 phases
+    # Count phases - should have 15 phases
     phase_count=$(grep -c "^# Phase [0-9]*:" "${PROJECT_DIR}/uninstall")
-    [[ "$phase_count" -eq 14 ]]
+    [[ "$phase_count" -eq 15 ]]
 }
 
 @test "install script phases are in order" {
