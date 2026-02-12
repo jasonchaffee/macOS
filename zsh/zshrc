@@ -8,9 +8,17 @@ fi
 # Homebrew
 # -------------------------------------------------------------------
 if [[ -f /opt/homebrew/bin/brew ]]; then
+    # macOS Apple Silicon
     eval "$(/opt/homebrew/bin/brew shellenv)"
 elif [[ -f /usr/local/bin/brew ]]; then
+    # macOS Intel
     eval "$(/usr/local/bin/brew shellenv)"
+elif [[ -f /home/linuxbrew/.linuxbrew/bin/brew ]]; then
+    # Linux (system-wide)
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+elif [[ -f ~/.linuxbrew/bin/brew ]]; then
+    # Linux (user-local)
+    eval "$(~/.linuxbrew/bin/brew shellenv)"
 fi
 
 # -------------------------------------------------------------------
@@ -34,35 +42,57 @@ fi
 
 # eza - modern ls replacement (icons, colors, git status)
 # https://github.com/eza-community/eza
-alias ls='eza'                    # basic listing with colors
-alias ll='eza -l --git'           # long format with git status
-alias la='eza -la --git'          # long format including hidden files
-alias tree='eza --tree'           # tree view (replaces standalone tree command)
+if command -v eza >/dev/null 2>&1; then
+    alias ls='eza'                    # basic listing with colors
+    alias ll='eza -l --git'           # long format with git status
+    alias la='eza -la --git'          # long format including hidden files
+    alias tree='eza --tree'           # tree view (replaces standalone tree command)
+fi
 
 # bat - modern cat replacement (syntax highlighting, line numbers)
 # https://github.com/sharkdp/bat
-alias cat='bat --paging=never'    # disable paging for pipe compatibility
+if command -v bat >/dev/null 2>&1; then
+    alias cat='bat --paging=never'    # disable paging for pipe compatibility
+fi
 
 # colordiff - colorized diff output
-alias diff='colordiff'
+if command -v colordiff >/dev/null 2>&1; then
+    alias diff='colordiff'
+fi
 
 # -------------------------------------------------------------------
 # Antidote ZSH Plugin Manager
 # -------------------------------------------------------------------
-# Source Antidote from Brew Install
-if command -v brew >/dev/null 2>&1; then
+# Source Antidote - check multiple install locations
+ANTIDOTE_LOADED=false
+
+# Homebrew install (macOS and Linux)
+if [[ "$ANTIDOTE_LOADED" = false ]] && command -v brew >/dev/null 2>&1; then
     if [[ -f "$(brew --prefix)/opt/antidote/share/antidote/antidote.zsh" ]]; then
         . "$(brew --prefix)/opt/antidote/share/antidote/antidote.zsh"
-
-        # use friendly names
-        zstyle ':antidote:bundle' use-friendly-names 'yes'
-    fi
-
-     if command -v antidote >/dev/null 2>&1; then
-        # initialize plugins statically with ${ZDOTDIR:-~}/.zsh_plugins.txt
-        antidote load
+        ANTIDOTE_LOADED=true
     fi
 fi
+
+# Arch Linux AUR (zsh-antidote package)
+if [[ "$ANTIDOTE_LOADED" = false && -f /usr/share/zsh-antidote/antidote.zsh ]]; then
+    . /usr/share/zsh-antidote/antidote.zsh
+    ANTIDOTE_LOADED=true
+fi
+
+# Git clone install (common on Linux: ~/.antidote)
+if [[ "$ANTIDOTE_LOADED" = false && -f "${ZDOTDIR:-$HOME}/.antidote/antidote.zsh" ]]; then
+    . "${ZDOTDIR:-$HOME}/.antidote/antidote.zsh"
+    ANTIDOTE_LOADED=true
+fi
+
+# Configure and load plugins if antidote is available
+if [[ "$ANTIDOTE_LOADED" = true ]]; then
+    zstyle ':antidote:bundle' use-friendly-names 'yes'
+    antidote load
+fi
+
+unset ANTIDOTE_LOADED
 
 # -------------------------------------------------------------------
 # Machine-Specific Configuration

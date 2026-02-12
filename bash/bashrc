@@ -1,11 +1,62 @@
-UNAME=$(uname -s)
-
 # Source global definitions
 if [[ -f /etc/bashrc ]]; then
-	. /etc/bashrc
+    . /etc/bashrc
+fi
+
+# -------------------------------------------------------------------
+# Homebrew
+# -------------------------------------------------------------------
+if [[ -f /opt/homebrew/bin/brew ]]; then
+    # macOS Apple Silicon
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [[ -f /usr/local/bin/brew ]]; then
+    # macOS Intel
+    eval "$(/usr/local/bin/brew shellenv)"
+elif [[ -f /home/linuxbrew/.linuxbrew/bin/brew ]]; then
+    # Linux (system-wide)
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+elif [[ -f ~/.linuxbrew/bin/brew ]]; then
+    # Linux (user-local)
+    eval "$(~/.linuxbrew/bin/brew shellenv)"
+fi
+
+# -------------------------------------------------------------------
+# Mise Version Manager
+# -------------------------------------------------------------------
+if command -v mise >/dev/null 2>&1; then
+    eval "$(mise activate bash)"
 fi
 
 # Source .profile, if it exists
 if [[ -f ${HOME}/.profile ]]; then
     . ${HOME}/.profile
+fi
+
+# -------------------------------------------------------------------
+# Aliases - Modern CLI Replacements
+# -------------------------------------------------------------------
+
+# eza - modern ls replacement
+if command -v eza >/dev/null 2>&1; then
+    alias ls='eza'
+    alias ll='eza -l --git'
+    alias la='eza -la --git'
+    alias tree='eza --tree'
+fi
+
+# bat - modern cat replacement
+if command -v bat >/dev/null 2>&1; then
+    alias cat='bat --paging=never'
+fi
+
+# colordiff - colorized diff output
+if command -v colordiff >/dev/null 2>&1; then
+    alias diff='colordiff'
+fi
+
+# -------------------------------------------------------------------
+# Machine-Specific Configuration
+# -------------------------------------------------------------------
+if [[ -f ${HOME}/.bashrc.local ]]; then
+    . ${HOME}/.bashrc.local
 fi
