@@ -74,9 +74,18 @@ if [[ "$ANTIDOTE_LOADED" = false ]] && command -v brew >/dev/null 2>&1; then
     fi
 fi
 
-# Arch Linux AUR (zsh-antidote package)
+# Linux package manager installs
 if [[ "$ANTIDOTE_LOADED" = false && -f /usr/share/zsh-antidote/antidote.zsh ]]; then
+    # Arch Linux AUR (zsh-antidote package)
     . /usr/share/zsh-antidote/antidote.zsh
+    ANTIDOTE_LOADED=true
+elif [[ "$ANTIDOTE_LOADED" = false && -f /usr/local/share/antidote/antidote.zsh ]]; then
+    # Manual install to /usr/local
+    . /usr/local/share/antidote/antidote.zsh
+    ANTIDOTE_LOADED=true
+elif [[ "$ANTIDOTE_LOADED" = false && -f /usr/share/antidote/antidote.zsh ]]; then
+    # System package manager install
+    . /usr/share/antidote/antidote.zsh
     ANTIDOTE_LOADED=true
 fi
 
