@@ -48,7 +48,7 @@ test-output
 .vscode/
 
 ## Claude
-.claude
+.claude/settings.local.json
 
 # sbt
 .cache/
