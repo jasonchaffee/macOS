@@ -5,3 +5,4 @@ source ${BASE_DIR}/../lib/backup
 
 # Install with merge/replace prompt if files differ
 install_with_backup "${BASE_DIR}/bashrc" "${HOME}/.bashrc"
+install_with_backup "${BASE_DIR}/bashrc.local" "${HOME}/.bashrc.local"

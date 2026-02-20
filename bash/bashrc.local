@@ -1,0 +1,3 @@
+# Machine-specific bash configuration
+# This file is sourced by ~/.bashrc and is NOT tracked in git
+# Keep secrets, API keys, and machine-specific paths here

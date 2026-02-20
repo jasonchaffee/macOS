@@ -6,5 +6,6 @@ source ${BASE_DIR}/../lib/backup
 # Install with merge/replace prompt if files differ
 install_with_backup "${BASE_DIR}/zsh_plugins.txt" "${HOME}/.zsh_plugins.txt"
 install_with_backup "${BASE_DIR}/zshrc" "${HOME}/.zshrc"
+install_with_backup "${BASE_DIR}/zshrc.local" "${HOME}/.zshrc.local"
 
 . ${HOME}/.zshrc
