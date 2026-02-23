@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 # Usage: uninstall-tool <type>:<package>[@version]
-# Types: brew, brew-cask, mise, npm, mas, vscode, cursor, uv, gcloud, go, cargo
+# Types: brew, brew-cask, mise, npm, mas, vscode, cursor, uv, gcloud, go, cargo, gh
 # Returns: 0 on success/not installed, 1 on failure, 2 on manual install detected
 
 BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
@@ -144,6 +144,18 @@ case $type in
             fi
             echo -e "${YELLOW}Uninstalling Cargo tool:${NC} ${BOLD}$package${NC}"
             cargo uninstall $package
+            exit $?
+        fi
+        ;;
+    gh)
+        if command -v gh >/dev/null 2>&1; then
+            # Check if installed
+            if ! gh extension list 2>/dev/null | grep -q "$package"; then
+                echo -e "${GREEN}Not installed:${NC} ${BOLD}$package${NC}"
+                exit 0
+            fi
+            echo -e "${YELLOW}Uninstalling GitHub CLI extension:${NC} ${BOLD}$package${NC}"
+            gh extension remove $package
             exit $?
         fi
         ;;

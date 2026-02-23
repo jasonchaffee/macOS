@@ -22,7 +22,7 @@ load test_helper
 }
 
 @test "tools.conf contains only valid types" {
-    valid_types="brew|brew-cask|mise|npm|mas|vscode|cursor|uv|gcloud|go|cargo"
+    valid_types="brew|brew-cask|mise|npm|mas|vscode|cursor|uv|gcloud|go|cargo|gh"
 
     while IFS= read -r line; do
         # Skip empty lines and comments

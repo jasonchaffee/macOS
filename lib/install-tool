@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 # Usage: install-tool <type>:<package>[@version]
-# Types: brew, brew-cask, mise, npm, mas, vscode, cursor, uv, gcloud, go, cargo
+# Types: brew, brew-cask, mise, npm, mas, vscode, cursor, uv, gcloud, go, cargo, gh
 # Returns: 0 on success, 1 on failure, 2 on manual install detected
 
 BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
@@ -151,6 +151,18 @@ case $type in
             else
                 cargo install $package --version $version
             fi
+            exit $?
+        fi
+        ;;
+    gh)
+        if command -v gh >/dev/null 2>&1; then
+            # Check if already installed
+            if gh extension list 2>/dev/null | grep -q "$package"; then
+                echo -e "${GREEN}Already installed:${NC} ${BOLD}$package${NC}"
+                exit 0
+            fi
+            echo -e "${CYAN}Installing GitHub CLI extension:${NC} ${BOLD}$package${NC}"
+            gh extension install $package
             exit $?
         fi
         ;;
