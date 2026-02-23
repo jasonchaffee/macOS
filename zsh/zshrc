@@ -54,6 +54,15 @@ if command -v eza >/dev/null 2>&1; then
     alias tree='eza --tree'           # tree view (replaces standalone tree command)
 fi
 
+# nuls - NuShell-inspired ls (colorful table output)
+# https://github.com/nuls-ls/nuls
+if command -v nuls >/dev/null 2>&1; then
+    alias nls='nuls'
+    alias nlst='nuls -t'              # sort by time
+    alias nlsa='nuls -a'              # show hidden files
+    alias nlsat='nuls -at'            # hidden files sorted by time
+fi
+
 # bat - modern cat replacement (syntax highlighting, line numbers)
 # https://github.com/sharkdp/bat
 if command -v bat >/dev/null 2>&1; then
