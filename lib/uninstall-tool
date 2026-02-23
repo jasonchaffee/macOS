@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 # Usage: uninstall-tool <type>:<package>[@version]
-# Types: brew, brew-cask, mise, npm, mas, vscode, cursor, uv, gcloud, go
+# Types: brew, brew-cask, mise, npm, mas, vscode, cursor, uv, gcloud, go, cargo
 # Returns: 0 on success/not installed, 1 on failure, 2 on manual install detected
 
 BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
@@ -132,6 +132,18 @@ case $type in
             fi
             echo -e "${YELLOW}Uninstalling Go tool:${NC} ${BOLD}$binary_name${NC}"
             rm -f "$binary_path"
+            exit $?
+        fi
+        ;;
+    cargo)
+        if command -v cargo >/dev/null 2>&1; then
+            # Check if installed
+            if ! cargo install --list 2>/dev/null | grep -q "^$package "; then
+                echo -e "${GREEN}Not installed:${NC} ${BOLD}$package${NC}"
+                exit 0
+            fi
+            echo -e "${YELLOW}Uninstalling Cargo tool:${NC} ${BOLD}$package${NC}"
+            cargo uninstall $package
             exit $?
         fi
         ;;
