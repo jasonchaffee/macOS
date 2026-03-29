@@ -39,26 +39,11 @@ if [[ -f ${HOME}/.profile ]]; then
 fi
 
 # -------------------------------------------------------------------
-# Editor Configuration
-# -------------------------------------------------------------------
-# Sets the default editor for git, k9s, and other CLI tools.
-# KUBE_EDITOR is used specifically by kubectl and k9s.
-if command -v vim >/dev/null 2>&1; then
-    export EDITOR="vim"
-    export KUBE_EDITOR="vim"
-fi
-
-# -------------------------------------------------------------------
 # Aliases - Modern CLI Replacements
 # -------------------------------------------------------------------
 # These aliases replace legacy commands with modern alternatives that
 # provide better output, colors, and features while maintaining
 # familiar command names for muscle memory.
-
-# k9s - Kubernetes CLI to manage clusters in style
-if command -v k9s >/dev/null 2>&1; then
-    alias k9s='k9s'
-fi
 
 # eza - modern ls replacement (icons, colors, git status)
 # https://github.com/eza-community/eza
