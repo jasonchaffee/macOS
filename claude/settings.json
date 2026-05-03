@@ -1,5 +1,21 @@
 {
-  "model": "opus",
-  "alwaysThinkingEnabled": true,
-  "autoUpdatesChannel": "stable"
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "model": "sonnet[1m]",
+  "autoUpdatesChannel": "stable",
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
+  "cleanupPeriodDays": 90,
+  "includeGitInstructions": false,
+  "env": {
+    "DISABLE_AUTOUPDATER": "1",
+    "CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS": "1",
+    "CLAUDE_CODE_RESUME_INTERRUPTED_TURN": "1",
+    "USE_BUILTIN_RIPGREP": "0",
+    "CLAUDE_CODE_SUBAGENT_MODEL": "haiku",
+    "MAX_THINKING_TOKENS": "10000",
+    "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "75",
+    "ENABLE_TOOL_SEARCH": "1"
+  }
 }

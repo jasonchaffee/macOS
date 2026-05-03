@@ -101,6 +101,37 @@ export NODE_EXTRA_CA_CERTS="/path/to/certs.pem"
 
 This file is sourced by `~/.zshrc` if it exists.
 
+## Claude Code Configuration
+
+`claude/settings.json` is installed to `~/.claude/settings.json` on first install (never overwrites existing). It sets sensible defaults:
+
+| Setting | Value | Purpose |
+|---|---|---|
+| `model` | `sonnet[1m]` | Default session model |
+| `autoUpdatesChannel` | `stable` | Only stable releases |
+| `cleanupPeriodDays` | `90` | Conversation history retention |
+| `includeGitInstructions` | `false` | Suppress git tips in prompts |
+| `DISABLE_AUTOUPDATER` | `1` | Manage updates manually |
+| `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS` | `1` | Stability over cutting-edge |
+| `CLAUDE_CODE_RESUME_INTERRUPTED_TURN` | `1` | Resume on network drop |
+| `USE_BUILTIN_RIPGREP` | `0` | Use system ripgrep |
+| `CLAUDE_CODE_SUBAGENT_MODEL` | `haiku` | Cost-efficient subagents |
+| `MAX_THINKING_TOKENS` | `10000` | Cap extended thinking budget |
+| `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE` | `75` | Compact context at 75% |
+| `ENABLE_TOOL_SEARCH` | `1` | Enable tool search |
+
+### Optional env vars (add to `~/.claude/settings.json` manually)
+
+These are not in the template because they are account- or setup-specific:
+
+| Var | Purpose |
+|---|---|
+| `ANTHROPIC_MODEL=opusplan` | Required for `/opusplan` skill on some plans |
+| `ANTHROPIC_DEFAULT_OPUS_MODEL=claude-opus-4-6` | Pin Opus model for planning subagents |
+| `ANTHROPIC_DEFAULT_SONNET_MODEL=claude-sonnet-4-6[1m]` | Pin Sonnet model with 1M context |
+| `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` | Enable experimental multi-agent teams feature |
+| `AI_CONTEXT_OPTIMIZER_TOOLS=Read,Bash` | Opt-in token saver: caches tool output and sends unified diffs instead of full output on repeated calls. No-op without `context-optimizer.sh` PostToolUse hook installed. |
+
 ## What's Installed
 
 See [tools.conf](tools.conf) for the full list of tools with descriptions.
