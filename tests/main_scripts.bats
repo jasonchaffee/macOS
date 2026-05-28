@@ -107,6 +107,13 @@ load test_helper
     grep -q 'env -u HOMEBREW_PREFIX -u HOMEBREW_CELLAR -u HOMEBREW_REPOSITORY' "${PROJECT_DIR}/bash/bashrc"
 }
 
+@test "shell startup separates Darwin and Linux Homebrew paths" {
+    grep -q 'case "$(uname -s)" in' "${PROJECT_DIR}/zsh/zshrc"
+    grep -q 'case "$(uname -s)" in' "${PROJECT_DIR}/bash/bashrc"
+    grep -q 'Linux compatibility symlink' "${PROJECT_DIR}/zsh/zshrc"
+    grep -q 'Linux compatibility symlink' "${PROJECT_DIR}/bash/bashrc"
+}
+
 # AI tool config tests
 @test "antigravity install script exists and is executable" {
     [[ -x "${PROJECT_DIR}/antigravity/install" ]]

@@ -16,19 +16,29 @@ _brew_shellenv() {
     env -u HOMEBREW_PREFIX -u HOMEBREW_CELLAR -u HOMEBREW_REPOSITORY "$brew_bin" shellenv
 }
 
-if [[ -x /opt/homebrew/bin/brew ]]; then
-    # macOS Apple Silicon
-    eval "$(_brew_shellenv /opt/homebrew/bin/brew)"
-elif [[ -x /usr/local/bin/brew ]]; then
-    # macOS Intel
-    eval "$(_brew_shellenv /usr/local/bin/brew)"
-elif [[ -x /home/linuxbrew/.linuxbrew/bin/brew ]]; then
-    # Linux (system-wide)
-    eval "$(_brew_shellenv /home/linuxbrew/.linuxbrew/bin/brew)"
-elif [[ -x "$HOME/.linuxbrew/bin/brew" ]]; then
-    # Linux (user-local)
-    eval "$(_brew_shellenv "$HOME/.linuxbrew/bin/brew")"
-fi
+case "$(uname -s)" in
+    Darwin)
+        if [[ -x /opt/homebrew/bin/brew ]]; then
+            # macOS Apple Silicon
+            eval "$(_brew_shellenv /opt/homebrew/bin/brew)"
+        elif [[ -x /usr/local/bin/brew ]]; then
+            # macOS Intel
+            eval "$(_brew_shellenv /usr/local/bin/brew)"
+        fi
+        ;;
+    Linux)
+        if [[ -x /home/linuxbrew/.linuxbrew/bin/brew ]]; then
+            # Linux (system-wide)
+            eval "$(_brew_shellenv /home/linuxbrew/.linuxbrew/bin/brew)"
+        elif [[ -x "$HOME/.linuxbrew/bin/brew" ]]; then
+            # Linux (user-local)
+            eval "$(_brew_shellenv "$HOME/.linuxbrew/bin/brew")"
+        elif [[ -x /usr/local/bin/brew ]]; then
+            # Linux compatibility symlink
+            eval "$(_brew_shellenv /usr/local/bin/brew)"
+        fi
+        ;;
+esac
 unset -f _brew_shellenv
 
 # -------------------------------------------------------------------
