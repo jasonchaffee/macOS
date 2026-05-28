@@ -14,11 +14,17 @@ echo -e "${BLUE}Phase 1:${NC} Bootstrap Homebrew"
 ${BASE_DIR}/brew/install
 
 # Setup brew in PATH for this session
-if [[ -f /opt/homebrew/bin/brew ]]; then
-    eval "$(/opt/homebrew/bin/brew shellenv)"
-elif [[ -f /usr/local/bin/brew ]]; then
-    eval "$(/usr/local/bin/brew shellenv)"
+_brew_shellenv() {
+    local brew_bin="$1"
+    env -u HOMEBREW_PREFIX -u HOMEBREW_CELLAR -u HOMEBREW_REPOSITORY "$brew_bin" shellenv
+}
+
+if [[ -x /opt/homebrew/bin/brew ]]; then
+    eval "$(_brew_shellenv /opt/homebrew/bin/brew)"
+elif [[ -x /usr/local/bin/brew ]]; then
+    eval "$(_brew_shellenv /usr/local/bin/brew)"
 fi
+unset -f _brew_shellenv
 
 # Phase 2: Brew packages
 echo -e "\n${BLUE}Phase 2:${NC} Brew packages"

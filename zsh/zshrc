@@ -12,19 +12,25 @@ export PATH="$HOME/.local/bin:$PATH"
 # -------------------------------------------------------------------
 # Homebrew
 # -------------------------------------------------------------------
-if [[ -f /opt/homebrew/bin/brew ]]; then
+_brew_shellenv() {
+    local brew_bin="$1"
+    env -u HOMEBREW_PREFIX -u HOMEBREW_CELLAR -u HOMEBREW_REPOSITORY "$brew_bin" shellenv
+}
+
+if [[ -x /opt/homebrew/bin/brew ]]; then
     # macOS Apple Silicon
-    eval "$(/opt/homebrew/bin/brew shellenv)"
-elif [[ -f /usr/local/bin/brew ]]; then
+    eval "$(_brew_shellenv /opt/homebrew/bin/brew)"
+elif [[ -x /usr/local/bin/brew ]]; then
     # macOS Intel
-    eval "$(/usr/local/bin/brew shellenv)"
-elif [[ -f /home/linuxbrew/.linuxbrew/bin/brew ]]; then
+    eval "$(_brew_shellenv /usr/local/bin/brew)"
+elif [[ -x /home/linuxbrew/.linuxbrew/bin/brew ]]; then
     # Linux (system-wide)
-    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-elif [[ -f ~/.linuxbrew/bin/brew ]]; then
+    eval "$(_brew_shellenv /home/linuxbrew/.linuxbrew/bin/brew)"
+elif [[ -x "$HOME/.linuxbrew/bin/brew" ]]; then
     # Linux (user-local)
-    eval "$(~/.linuxbrew/bin/brew shellenv)"
+    eval "$(_brew_shellenv "$HOME/.linuxbrew/bin/brew")"
 fi
+unset -f _brew_shellenv
 
 # -------------------------------------------------------------------
 # Mise Version Manager

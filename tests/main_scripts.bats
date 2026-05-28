@@ -102,6 +102,11 @@ load test_helper
     grep -q 'zshrc.local' "${PROJECT_DIR}/zsh/zshrc"
 }
 
+@test "shell startup sanitizes stale Homebrew env before shellenv" {
+    grep -q 'env -u HOMEBREW_PREFIX -u HOMEBREW_CELLAR -u HOMEBREW_REPOSITORY' "${PROJECT_DIR}/zsh/zshrc"
+    grep -q 'env -u HOMEBREW_PREFIX -u HOMEBREW_CELLAR -u HOMEBREW_REPOSITORY' "${PROJECT_DIR}/bash/bashrc"
+}
+
 # AI tool config tests
 @test "antigravity install script exists and is executable" {
     [[ -x "${PROJECT_DIR}/antigravity/install" ]]
