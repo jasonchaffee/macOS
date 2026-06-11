@@ -3,15 +3,7 @@
 BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
 source ${BASE_DIR}/../lib/colors
 
-DEST="${HOME}/Library/Application Support/iTerm2/iterm2.itermexport"
-
-if [[ -f "$DEST" ]]; then
-    rm -f "$DEST"
-    echo -e "${GREEN}Removed${NC} ~/Library/Application Support/iTerm2/iterm2.itermexport"
-else
-    echo -e "${GREEN}Already removed${NC} iterm2.itermexport"
-fi
-
+echo -e "${GREEN}Uninstalling${NC} iTerm2 preferences"
 echo ""
 echo -e "${YELLOW}Note:${NC} iTerm2 preferences are not automatically reverted."
-echo "  To restore defaults: iTerm2 → Preferences → Import a different export, or reset via defaults delete com.googlecode.iterm2"
+echo "  To restore defaults: iTerm2 → Preferences → Import a different export, or reset via: defaults delete com.googlecode.iterm2"
