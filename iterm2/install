@@ -1,0 +1,15 @@
+#!/usr/bin/env zsh
+
+BASE_DIR=$( cd $( dirname ${(%):-%x} ) &> /dev/null && pwd )
+source ${BASE_DIR}/../lib/colors
+
+EXPORT_FILE="${BASE_DIR}/iterm2.itermexport"
+DEST="${HOME}/Library/Application Support/iTerm2/iterm2.itermexport"
+
+echo -e "${GREEN}Installing${NC} iTerm2 preferences"
+cp -f "$EXPORT_FILE" "$DEST"
+echo -e "${GREEN}Copied${NC} iterm2.itermexport → ~/Library/Application Support/iTerm2/"
+echo ""
+echo -e "${YELLOW}Manual step required:${NC}"
+echo "  In iTerm2: General → Preferences → Import"
+echo "  Select: ~/Library/Application Support/iTerm2/iterm2.itermexport"

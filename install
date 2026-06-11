@@ -87,6 +87,7 @@ ${BASE_DIR}/lib/install-tools vscode $failure_log $manual_log
 echo -e "\n${BLUE}Phase 14:${NC} Custom configs"
 ${BASE_DIR}/git/install
 ${BASE_DIR}/vim/install
+${BASE_DIR}/iterm2/install
 
 # Phase 15: AI tool configs
 echo -e "\n${BLUE}Phase 15:${NC} AI tool configs"

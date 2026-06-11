@@ -22,6 +22,7 @@ fi
 
 # Phase 2: Custom configs
 echo -e "\n${YELLOW}Phase 2:${NC} Custom configs"
+${BASE_DIR}/iterm2/uninstall
 ${BASE_DIR}/vim/uninstall
 ${BASE_DIR}/git/uninstall
 
