@@ -128,7 +128,15 @@ fi
 # Configure and load plugins if antidote is available
 if [[ "$ANTIDOTE_LOADED" = true ]]; then
     zstyle ':antidote:bundle' use-friendly-names 'yes'
-    antidote load
+    # Use static bundle: only regenerate when .zsh_plugins.txt is newer than the compiled bundle.
+    # antidote load re-sources all plugins on every shell start, causing prompt functions to
+    # accumulate in PROMPT (visible as repeated $(java_prompt_info)$(node_prompt_info)...).
+    local _zsh_plugins=${ZDOTDIR:-$HOME}/.zsh_plugins.zsh
+    if [[ ! -f $_zsh_plugins || $_zsh_plugins -ot ${ZDOTDIR:-$HOME}/.zsh_plugins.txt ]]; then
+        antidote bundle <${ZDOTDIR:-$HOME}/.zsh_plugins.txt >$_zsh_plugins
+    fi
+    source $_zsh_plugins
+    unset _zsh_plugins
 fi
 
 unset ANTIDOTE_LOADED
