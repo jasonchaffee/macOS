@@ -142,13 +142,6 @@ fi
 unset ANTIDOTE_LOADED
 
 # -------------------------------------------------------------------
-# bun
-# -------------------------------------------------------------------
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
-[ -s "$BUN_INSTALL/_bun" ] && source "$BUN_INSTALL/_bun"
-
-# -------------------------------------------------------------------
 # Machine-Specific Configuration
 # -------------------------------------------------------------------
 # Source ~/.zshrc.local for machine-specific settings like:

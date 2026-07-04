@@ -1,3 +1,10 @@
 # Machine-specific zsh configuration
 # This file is sourced by ~/.zshrc and is NOT tracked in git
 # Keep secrets, API keys, and machine-specific paths here
+
+# -------------------------------------------------------------------
+# Bun
+# -------------------------------------------------------------------
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+[ -s "$BUN_INSTALL/_bun" ] && source "$BUN_INSTALL/_bun"
