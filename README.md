@@ -128,7 +128,7 @@ These are not in the template because they are account- or setup-specific:
 |---|---|
 | `ANTHROPIC_MODEL=opusplan` | Required for `/opusplan` skill on some plans |
 | `ANTHROPIC_DEFAULT_OPUS_MODEL=claude-opus-4-6` | Pin Opus model for planning subagents |
-| `ANTHROPIC_DEFAULT_SONNET_MODEL=claude-sonnet-4-6[1m]` | Pin Sonnet model with 1M context |
+| `ANTHROPIC_DEFAULT_SONNET_MODEL=claude-sonnet-5[1m]` | Pin Sonnet model with 1M context |
 | `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` | Enable experimental multi-agent teams feature |
 | `AI_CONTEXT_OPTIMIZER_TOOLS=Read,Bash` | Opt-in token saver: caches tool output and sends unified diffs instead of full output on repeated calls. No-op without `context-optimizer.sh` PostToolUse hook installed. |
 
