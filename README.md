@@ -112,7 +112,7 @@ This file is sourced by `~/.zshrc` if it exists.
 | `cleanupPeriodDays` | `90` | Conversation history retention |
 | `includeGitInstructions` | `false` | Suppress git tips in prompts |
 | `DISABLE_AUTOUPDATER` | `1` | Manage updates manually |
-| `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS` | `1` | Stability over cutting-edge |
+| `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS` | `0` | Required for Tool Search (`ENABLE_TOOL_SEARCH`) to take effect |
 | `CLAUDE_CODE_RESUME_INTERRUPTED_TURN` | `1` | Resume on network drop |
 | `USE_BUILTIN_RIPGREP` | `0` | Use system ripgrep |
 | `CLAUDE_CODE_SUBAGENT_MODEL` | `haiku` | Cost-efficient subagents |
