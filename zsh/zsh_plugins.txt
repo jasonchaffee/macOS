@@ -55,7 +55,7 @@ ohmyzsh/ohmyzsh path:plugins/colored-man-pages  # load OMZ plugins
 # ohmyzsh/ohmyzsh path:plugins/magic-enter
 ohmyzsh/ohmyzsh path:plugins/command-not-found
 ohmyzsh/ohmyzsh path:plugins/dotenv
-ohmyzsh/ohmyzsh path:plugins/history
+# ohmyzsh/ohmyzsh path:plugins/history  # disabled: its 'hl' alias shadows the brew 'hl' log viewer
 
 # oh-my-zsh: iterm2
 ohmyzsh/ohmyzsh path:plugins/iterm2
